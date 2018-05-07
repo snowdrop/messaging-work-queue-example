@@ -1,0 +1,15 @@
+{
+    "name": "upstate-web-nodejs",
+    "version": "1.0.0",
+    "description": "A sample Node.js app that sends requests",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "express": "^4.16.0",
+        "npm": "^6.0.0",
+        "rhea": "^0.2.8"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ssorj/upstate.git"
+    }
+}

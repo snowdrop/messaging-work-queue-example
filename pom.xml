@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.openshift.booster</groupId>
+    <artifactId>spring-boot-booster-parent</artifactId>
+    <version>1.5.12-3</version>
+  </parent>
+
+  <artifactId>spring-boot-messaging-booster-parent</artifactId>
+  <version>1.5.12-1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <properties>
+    <amqphub.version>0.4.0</amqphub.version>
+    <artemis.version>1.5.6</artemis.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-artemis</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>artemis-jms-server</artifactId>
+        <version>${artemis.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>artemis-amqp-protocol</artifactId>
+        <version>${artemis.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.amqphub.spring</groupId>
+        <artifactId>amqp-10-jms-spring-boot-starter</artifactId>
+        <version>${amqphub.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <modules>
+    <module>dashboard</module>
+    <module>worker</module>
+  </modules>
+</project>
