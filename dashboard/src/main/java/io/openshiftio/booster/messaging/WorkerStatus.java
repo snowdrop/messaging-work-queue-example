@@ -16,13 +16,15 @@
 
 package io.openshiftio.booster.messaging;
 
+import java.util.Objects;
+
 public class WorkerStatus {
 
     private final long timestamp;
 
-    private final int requestsProcessed;
+    private final long requestsProcessed;
 
-    public WorkerStatus(long timestamp, int requestsProcessed) {
+    public WorkerStatus(long timestamp, long requestsProcessed) {
         this.timestamp = timestamp;
         this.requestsProcessed = requestsProcessed;
     }
@@ -31,7 +33,32 @@ public class WorkerStatus {
         return timestamp;
     }
 
-    public int getRequestsProcessed() {
+    public long getRequestsProcessed() {
         return requestsProcessed;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        WorkerStatus that = (WorkerStatus) o;
+
+        return timestamp == that.timestamp && requestsProcessed == that.requestsProcessed;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timestamp, requestsProcessed);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("WorkerStatus{timestamp=%s, requestsProcessed=%s}", timestamp, requestsProcessed);
+    }
+
 }

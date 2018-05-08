@@ -7,12 +7,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.support.JmsHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WorkerTest {
@@ -46,19 +50,15 @@ public class WorkerTest {
         assertThat(requestsProcessed.get()).isEqualTo(1);
     }
 
-    /*
-    @Scheduled(fixedRate = 5 * 1000)
-    public void sendStatusUpdate() {
-        System.out.println("WORKER-SPRING: Sending status update");
+    @Test
+    public void shouldSendStatusUpdate() {
+        given(mockWorkerProperties.getId()).willReturn("test-worker-id");
 
-        jmsTemplate.send("upstate/worker-status", session -> {
-            javax.jms.Message message = session.createTextMessage();
-            message.setStringProperty("worker_id", properties.getId());
-            message.setLongProperty("timestamp", System.currentTimeMillis());
-            message.setLongProperty("requests_processed", requestsProcessed.get());
-            return message;
-        });
+        AtomicInteger requestsProcessed = new AtomicInteger(1);
+        Worker worker = new Worker(mockWorkerProperties, mockJmsTemplate, requestsProcessed);
+        worker.sendStatusUpdate();
+
+        verify(mockJmsTemplate).send(eq("upstate/worker-status"), any(MessageCreator.class));
     }
-     */
 
 }

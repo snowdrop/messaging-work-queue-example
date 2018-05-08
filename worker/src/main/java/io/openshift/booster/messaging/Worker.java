@@ -18,6 +18,9 @@ package io.openshift.booster.messaging;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.JmsHeaders;
@@ -36,6 +39,9 @@ public class Worker {
 
     private final AtomicInteger requestsProcessed;
 
+    private final Logger logger;
+
+    @Autowired
     public Worker(WorkerProperties properties, JmsTemplate jmsTemplate) {
         this(properties, jmsTemplate, new AtomicInteger(0));
     }
@@ -44,13 +50,14 @@ public class Worker {
         this.properties = properties;
         this.jmsTemplate = jmsTemplate;
         this.requestsProcessed = requestsProcessed;
+        this.logger = LoggerFactory.getLogger(Worker.class);
     }
 
     @JmsListener(destination = "upstate/requests")
     public Message<String> handleRequest(Message<String> request) {
-        System.out.println("WORKER-SPRING: Received request '" + request.getPayload() + "'");
+        logger.info("Spring worker '{}' received request: {}", properties.getId(), request.getPayload());
         String responsePayload = processRequest(request);
-        System.out.println("WORKER-SPRING: Sending response '" + responsePayload + "'");
+        logger.info("Spring worker '{}' sending response: {}", properties.getId(), responsePayload);
 
         Message<String> response = MessageBuilder.withPayload(responsePayload)
                 .setHeader(JmsHeaders.CORRELATION_ID, request.getHeaders().get(MessageHeaders.ID))
@@ -64,7 +71,7 @@ public class Worker {
 
     @Scheduled(fixedRate = 5 * 1000)
     public void sendStatusUpdate() {
-        System.out.println("WORKER-SPRING: Sending status update");
+        logger.info("Spring worker '{}' sending status update");
 
         jmsTemplate.send("upstate/worker-status", session -> {
             javax.jms.Message message = session.createTextMessage();

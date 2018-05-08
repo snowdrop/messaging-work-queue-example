@@ -59,7 +59,7 @@ var upstate = {
         var lines = [];
 
         for (var response of data.responses) {
-            lines.unshift(("<b>" + response[0] + ":</b> ").padEnd(30) + response[1]);
+            lines.unshift(("<b>" + response["workerId"] + ":</b> ").padEnd(30) + response["body"]);
         }
 
         newContent.innerHTML = lines.join("\n");
@@ -76,10 +76,10 @@ var upstate = {
 
         var lines = [];
 
-        for (var worker_id in data.worker_status) {
-            var status = data.worker_status[worker_id];
-            var timestamp = status[0];
-            var requestsProcessed = status[1];
+        for (var worker_id in data.workerStatus) {
+            var status = data.workerStatus[worker_id];
+            var timestamp = status["timestamp"];
+            var requestsProcessed = status["requestsProcessed"];
 
             lines.unshift(("<b>" + worker_id + ":</b> ").padEnd(30) + timestamp + ", " + requestsProcessed);
         }

@@ -32,11 +32,6 @@ public class DashboardApplication {
     }
 
     @Bean
-    public Dashboard dashboard() {
-        return new Dashboard();
-    }
-
-    @Bean
     public DefaultJmsListenerContainerFactory jmsListenerContainerFactory(ConnectionFactory connectionFactory,
             DefaultJmsListenerContainerFactoryConfigurer configurer) {
         DefaultJmsListenerContainerFactory listenerFactory = new DefaultJmsListenerContainerFactory();

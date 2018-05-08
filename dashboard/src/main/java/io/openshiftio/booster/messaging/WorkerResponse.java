@@ -16,6 +16,8 @@
 
 package io.openshiftio.booster.messaging;
 
+import java.util.Objects;
+
 public class WorkerResponse {
 
     private final String workerId;
@@ -34,4 +36,29 @@ public class WorkerResponse {
     public String getBody() {
         return body;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        WorkerResponse that = (WorkerResponse) o;
+
+        return Objects.equals(workerId, that.workerId) && Objects.equals(body, that.body);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(workerId, body);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("WorkerResponse{workerId=%s, body=%s}", workerId, body);
+    }
+
 }
