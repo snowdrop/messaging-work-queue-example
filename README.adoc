@@ -1,0 +1,25 @@
+= Install AMQ
+
+```
+find . | grep templates | grep amq63 | xargs -n 1 oc apply -f
+oc new-app --template=amq63-basic -p APPLICATION_NAME=upstate -p IMAGE_STREAM_NAMESPACE=$(oc project -q) -p MQ_PROTOCOL=amqp -p MQ_QUEUES=upstate/requests,upstate/worker-status -p MQ_USERNAME=upstate -p MQ_PASSWORD=upstate
+```
+
+= Deploy the application
+
+```
+mvn clean fabric8:deploy -Popenshift
+```
+
+= Undeploy the application
+
+```
+mvn fabric8:undeploy
+```
+
+= Uninstall AMQ
+
+```
+oc delete all -l app=amq63-basic
+find . | grep templates | grep amq63 | xargs -n 1 oc delete -f
+```
