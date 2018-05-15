@@ -71,7 +71,7 @@ public class Worker {
 
     @Scheduled(fixedRate = 5 * 1000)
     public void sendStatusUpdate() {
-        logger.info("Spring worker '{}' sending status update");
+        logger.info("Spring worker '{}' sending status update", properties.getId());
 
         jmsTemplate.send("upstate/worker-status", session -> {
             javax.jms.Message message = session.createTextMessage();
