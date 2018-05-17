@@ -2,7 +2,7 @@
 
 ```
 find . | grep templates | grep amq63 | xargs -n 1 oc apply -f
-oc new-app --template=amq63-basic -p APPLICATION_NAME=upstate -p IMAGE_STREAM_NAMESPACE=$(oc project -q) -p MQ_PROTOCOL=amqp -p MQ_QUEUES=upstate/requests,upstate/worker-status -p MQ_USERNAME=upstate -p MQ_PASSWORD=upstate
+oc new-app --template=amq63-basic -p APPLICATION_NAME=upstate -p IMAGE_STREAM_NAMESPACE=$(oc project -q) -p MQ_PROTOCOL=amqp -p MQ_QUEUES=upstate/requests,upstate/response,upstate/worker-status -p MQ_USERNAME=upstate -p MQ_PASSWORD=upstate
 ```
 
 = Deploy the application
@@ -22,4 +22,10 @@ mvn fabric8:undeploy
 ```
 oc delete all -l app=amq63-basic
 find . | grep templates | grep amq63 | xargs -n 1 oc delete -f
+```
+
+= Run integration tests
+
+```
+mvn clean install -Popenshift,openshift-it
 ```

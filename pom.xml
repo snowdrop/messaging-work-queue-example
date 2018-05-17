@@ -40,11 +40,17 @@
         <artifactId>amqp-10-jms-spring-boot-starter</artifactId>
         <version>${amqphub.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.arquillian.cube</groupId>
+        <artifactId>arquillian-cube-requirement</artifactId>
+        <version>${arquillian-cube.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <modules>
     <module>dashboard</module>
     <module>worker</module>
+    <module>tests</module>
   </modules>
 </project>

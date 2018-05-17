@@ -9,7 +9,7 @@
     <version>1.5.12-1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>dashboard</artifactId>
+  <artifactId>spring-boot-messaging-booster-dashboard</artifactId>
 
   <dependencies>
     <dependency>
