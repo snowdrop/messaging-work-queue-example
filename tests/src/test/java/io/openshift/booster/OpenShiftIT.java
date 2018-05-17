@@ -74,10 +74,13 @@ public class OpenShiftIT {
                             .jsonPath();
                     assertThat(response.getList("responses")).hasSize(1);
                     assertThat(response.getString("responses[0].body")).isEqualTo(testData.toUpperCase());
+
                     String workerId = response.getString("responses[0].workerId");
-                    int requestsProcessed =
-                            response.getInt(String.format("workerStatus['%s'].requestsProcessed", workerId));
-                    assertThat(requestsProcessed).isEqualTo(1);
+                    String workerStatusKey = String.format("workerStatus['%s']", workerId);
+                    assertThat(response.getMap(workerStatusKey)).isNotNull();
+
+                    String requestsProcessedKey = String.format("workerStatus['%s'].requestsProcessed", workerId);
+                    assertThat(response.getInt(requestsProcessedKey)).isEqualTo(1);
                 });
     }
 

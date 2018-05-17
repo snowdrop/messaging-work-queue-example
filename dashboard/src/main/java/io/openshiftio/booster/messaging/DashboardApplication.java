@@ -22,8 +22,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 
+@EnableJms
 @SpringBootApplication
 public class DashboardApplication {
 
@@ -38,7 +40,6 @@ public class DashboardApplication {
         configurer.configure(listenerFactory, connectionFactory);
         listenerFactory.setTransactionManager(null);
         listenerFactory.setSessionTransacted(false);
-        listenerFactory.setClientId("dashboard");
         return listenerFactory;
     }
 

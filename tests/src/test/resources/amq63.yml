@@ -145,7 +145,7 @@ spec:
         - name: AMQ_TRANSPORTS
           value: "amqp"
         - name: AMQ_QUEUES
-          value: "upstate/requests,upstate/response,upstate/worker-status"
+          value: "upstate/requests,upstate/responses,upstate/worker-status"
         - name: AMQ_TOPICS
           value: ""
         - name: MQ_SERIALIZABLE_PACKAGES

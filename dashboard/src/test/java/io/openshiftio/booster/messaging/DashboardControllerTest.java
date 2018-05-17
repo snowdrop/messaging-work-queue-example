@@ -57,9 +57,19 @@ public class DashboardControllerTest {
 
         controller.sendRequest("test-body");
 
-        verify(mockJmsTemplate).sendAndReceive(eq("upstate/requests"), any(MessageCreator.class));
+        verify(mockJmsTemplate).send(eq("upstate/requests"), any(MessageCreator.class));
+    }
+
+    @Test
+    public void shouldHandleResponse() {
+        given(mockMessage.getPayload()).willReturn("test-body");
+        given(mockMessage.getHeaders()).willReturn(mockMessageHeaders);
+        given(mockMessageHeaders.get("worker_id", String.class)).willReturn("test-id");
+
+        controller.handleResponse(mockMessage);
+
         DashboardController.DashboardDataWrapper data = controller.getData();
-        assertThat(data.getResponses()).containsOnly(new WorkerResponse("test-id", "TEST-BODY"));
+        assertThat(data.getResponses()).containsOnly(new WorkerResponse("test-id", "test-body"));
     }
 
     @Test

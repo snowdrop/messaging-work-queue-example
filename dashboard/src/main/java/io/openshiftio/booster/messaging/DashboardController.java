@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jms.JMSException;
+import javax.jms.Queue;
+import javax.jms.TextMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,10 +64,19 @@ public class DashboardController {
     @PostMapping(path = "send-request")
     public void sendRequest(@RequestBody String requestData) throws JMSException {
         logger.info("Sending request: {}", requestData);
-        javax.jms.Message responseMessage =
-                jmsTemplate.sendAndReceive("upstate/requests", (s) -> s.createTextMessage(requestData));
-        String workerId = responseMessage.getStringProperty("worker_id");
-        String body = responseMessage.getBody(String.class);
+        jmsTemplate.send("upstate/requests", (s) -> {
+            TextMessage message = s.createTextMessage(requestData);
+            Queue responseQueue = s.createQueue("upstate/responses");
+            message.setJMSReplyTo(responseQueue);
+            return message;
+        });
+    }
+
+    @JmsListener(destination = "upstate/responses")
+    public void handleResponse(Message<String> response) {
+        MessageHeaders headers = response.getHeaders();
+        String workerId = headers.get("worker_id", String.class);
+        String body = response.getPayload();
 
         WorkerResponse workerResponse = new WorkerResponse(workerId, body);
         logger.info("Received response: {}", workerResponse);

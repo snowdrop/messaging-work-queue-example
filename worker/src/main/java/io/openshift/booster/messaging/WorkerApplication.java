@@ -44,7 +44,6 @@ public class WorkerApplication {
         configurer.configure(listenerFactory, connectionFactory);
         listenerFactory.setTransactionManager(null);
         listenerFactory.setSessionTransacted(false);
-        listenerFactory.setClientId(properties.getId());
         return listenerFactory;
     }
 
