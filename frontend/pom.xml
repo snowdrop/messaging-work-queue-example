@@ -5,11 +5,13 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.openshift.booster</groupId>
-    <artifactId>spring-boot-messaging-booster-parent</artifactId>
-    <version>1.5.12-1-SNAPSHOT</version>
+    <artifactId>spring-boot-messaging-work-queue-parent</artifactId>
+    <version>1.5.14-1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>spring-boot-messaging-booster-dashboard</artifactId>
+  <artifactId>spring-boot-messaging-work-queue-frontend</artifactId>
+
+  <name>Spring Boot - Messaging - Work Queue Booster - Frontend</name>
 
   <dependencies>
     <dependency>

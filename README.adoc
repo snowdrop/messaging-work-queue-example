@@ -1,31 +1,63 @@
-= Install AMQ
+# Messaging Work Queue Mission for Spring Boot
 
-```
-find . | grep templates | grep amq63 | xargs -n 1 oc apply -f
-oc new-app --template=amq63-basic -p APPLICATION_NAME=upstate -p IMAGE_STREAM_NAMESPACE=$(oc project -q) -p MQ_PROTOCOL=amqp -p MQ_QUEUES=upstate/requests,upstate/responses,upstate/worker-status -p MQ_USERNAME=upstate -p MQ_PASSWORD=upstate
+## Purpose
+
+This mission booster demonstrates how to dispatch tasks to a scalable
+set of worker processes using a message queue. It uses the AMQP 1.0
+message protocol to send and receive messages.
+
+## Prerequisites
+
+* The user has access to an OpenShift instance and is logged in.
+
+* The user has selected a project in which the frontend and backend
+  processes will be deployed.
+
+## Deployment
+
+### From a template
+
+Run the following commands to configure and deploy the applications.
+
+```bash
+oc apply -f templates
+
+oc new-app --template=amq63-basic \
+  -p APPLICATION_NAME=work-queue-broker \
+  -p IMAGE_STREAM_NAMESPACE=$(oc project -q) \
+  -p MQ_PROTOCOL=amqp \
+  -p MQ_QUEUES=work-queue/requests,work-queue/responses \
+  -p MQ_TOPICS=work-queue/worker-updates \
+  -p MQ_USERNAME=work-queue \
+  -p MQ_PASSWORD=work-queue
+
+oc new-app --template=vertx-messaging-work-queue-frontend
+oc new-app --template=vertx-messaging-work-queue-worker
 ```
 
-= Deploy the application
+### With FMP
 
-```
+Run the following commands to configure and deploy the applications.
+
+```bash
+oc apply -f templates/amq63-basic.yaml
+oc apply -f templates/amq63-is.yaml
+
+oc new-app --template=amq63-basic \
+  -p APPLICATION_NAME=work-queue-broker \
+  -p IMAGE_STREAM_NAMESPACE=$(oc project -q) \
+  -p MQ_PROTOCOL=amqp \
+  -p MQ_QUEUES=work-queue/requests,work-queue/responses \
+  -p MQ_TOPICS=work-queue/worker-updates \
+  -p MQ_USERNAME=work-queue \
+  -p MQ_PASSWORD=work-queue
+
 mvn clean fabric8:deploy -Popenshift
 ```
 
-= Undeploy the application
+## Modules
 
-```
-mvn fabric8:undeploy
-```
+The `frontend` module serves the web interface and communicates with
+workers in the backend.
 
-= Uninstall AMQ
-
-```
-oc delete all -l app=amq63-basic
-find . | grep templates | grep amq63 | xargs -n 1 oc delete -f
-```
-
-= Run integration tests
-
-```
-mvn clean install -Popenshift,openshift-it
-```
+The `worker` module implements the worker service in the backend.

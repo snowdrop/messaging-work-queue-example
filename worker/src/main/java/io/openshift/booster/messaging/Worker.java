@@ -16,16 +16,17 @@
 
 package io.openshift.booster.messaging;
 
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.jms.TextMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.JmsHeaders;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -33,57 +34,85 @@ import org.springframework.stereotype.Component;
 @Component
 public class Worker {
 
-    private final WorkerProperties properties;
+    static final String REQUEST_QUEUE_NAME = "work-queue/requests";
+
+    static final String UPDATE_QUEUE_NAME = "work-queue/worker-updates";
+
+    private final Logger logger = LoggerFactory.getLogger(Worker.class);
 
     private final JmsTemplate jmsTemplate;
 
+    private final String id;
+
     private final AtomicInteger requestsProcessed;
 
-    private final Logger logger;
+    private final AtomicInteger processingErrors;
 
     @Autowired
-    public Worker(WorkerProperties properties, JmsTemplate jmsTemplate) {
-        this(properties, jmsTemplate, new AtomicInteger(0));
-    }
-
-    Worker(WorkerProperties properties, JmsTemplate jmsTemplate, AtomicInteger requestsProcessed) {
-        this.properties = properties;
+    public Worker(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
-        this.requestsProcessed = requestsProcessed;
-        this.logger = LoggerFactory.getLogger(Worker.class);
+        this.id = "worker-spring-" + UUID.randomUUID().toString().substring(0, 4);
+        this.requestsProcessed = new AtomicInteger(0);
+        this.processingErrors = new AtomicInteger(0);
     }
 
-    @JmsListener(destination = "upstate/requests")
+    Worker(JmsTemplate jmsTemplate, String id, AtomicInteger requestsProcessed, AtomicInteger processingErrors) {
+        this.jmsTemplate = jmsTemplate;
+        this.id = id;
+        this.requestsProcessed = requestsProcessed;
+        this.processingErrors = processingErrors;
+    }
+
+    @JmsListener(destination = REQUEST_QUEUE_NAME)
     public Message<String> handleRequest(Message<String> request) {
-        logger.info("Spring worker '{}' received request: {}", properties.getId(), request.getPayload());
-        String responsePayload = processRequest(request);
-        logger.info("Spring worker '{}' sending response: {}", properties.getId(), responsePayload);
+        String responsePayload;
+        try {
+            responsePayload = processRequest(request);
+        } catch (Exception e) {
+            processingErrors.incrementAndGet();
+            logger.error("{}: Failed processing message: {}", id, e.getMessage());
+            return null;
+        }
 
         Message<String> response = MessageBuilder.withPayload(responsePayload)
-                .setHeader(JmsHeaders.CORRELATION_ID, request.getHeaders().get(MessageHeaders.ID))
-                .setHeader("worker_id", properties.getId())
+                .setHeader(WorkerHeaders.WORKER_ID, id)
                 .build();
 
         requestsProcessed.incrementAndGet();
+        logger.info("{}: Sent {}", id, response);
 
         return response;
     }
 
     @Scheduled(fixedRate = 5 * 1000)
     public void sendStatusUpdate() {
-        logger.info("Spring worker '{}' sending status update", properties.getId());
+        logger.debug("{}: Sending status update", id);
 
-        jmsTemplate.send("upstate/worker-status", session -> {
-            javax.jms.Message message = session.createTextMessage();
-            message.setStringProperty("worker_id", properties.getId());
-            message.setLongProperty("timestamp", System.currentTimeMillis());
-            message.setLongProperty("requests_processed", requestsProcessed.get());
+        jmsTemplate.send(UPDATE_QUEUE_NAME, session -> {
+            TextMessage message = session.createTextMessage();
+            message.setStringProperty(WorkerHeaders.WORKER_ID, id);
+            message.setLongProperty(WorkerHeaders.REQUESTS_PROCESSED, requestsProcessed.get());
+            message.setLongProperty(WorkerHeaders.PROCESSING_ERRORS, processingErrors.get());
             return message;
         });
     }
 
     private String processRequest(Message<String> request) {
-        return request.getPayload().toUpperCase();
+        boolean uppercase = request.getHeaders().get(WorkerHeaders.UPPERCASE, Boolean.class);
+        boolean reverse = request.getHeaders().get(WorkerHeaders.REVERSE, Boolean.class);
+        String text = request.getPayload();
+
+        logger.info("{}: Processing request: text='{}', uppercase='{}', reverse='{}'", id, text, uppercase, reverse);
+
+        if (uppercase) {
+            text = text.toUpperCase();
+        }
+
+        if (reverse) {
+            text = new StringBuilder(text).reverse().toString();
+        }
+
+        return text;
     }
 
 }

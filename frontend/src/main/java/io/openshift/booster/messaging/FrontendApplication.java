@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.openshiftio.booster.messaging;
+package io.openshift.booster.messaging;
 
 import javax.jms.ConnectionFactory;
 
@@ -24,13 +24,15 @@ import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFac
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableJms
 @SpringBootApplication
-public class DashboardApplication {
+@EnableScheduling
+public class FrontendApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DashboardApplication.class, args);
+        SpringApplication.run(FrontendApplication.class, args);
     }
 
     @Bean
