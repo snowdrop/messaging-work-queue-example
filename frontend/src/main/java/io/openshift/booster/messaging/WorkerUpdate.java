@@ -28,18 +28,18 @@ public class WorkerUpdate {
 
     private final long processingErrors;
 
-    public WorkerUpdate(String workerId, long timestamp, long requestsProcessed, long processingErrors) {
-        this.workerId = workerId;
-        this.timestamp = timestamp;
-        this.requestsProcessed = requestsProcessed;
-        this.processingErrors = processingErrors;
-    }
-
     public WorkerUpdate(MessageHeaders headers) {
         this.workerId = headers.get(FrontendHeaders.WORKER_ID, String.class);
         this.timestamp = headers.get(FrontendHeaders.TIMESTAMP, Long.class);
         this.requestsProcessed = headers.get(FrontendHeaders.REQUESTS_PROCESSED, Long.class);
         this.processingErrors = headers.get(FrontendHeaders.PROCESSING_ERRORS, Long.class);
+    }
+
+    WorkerUpdate(String workerId, long timestamp, long requestsProcessed, long processingErrors) {
+        this.workerId = workerId;
+        this.timestamp = timestamp;
+        this.requestsProcessed = requestsProcessed;
+        this.processingErrors = processingErrors;
     }
 
     public String getWorkerId() {

@@ -33,9 +33,9 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.Message;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -45,7 +45,7 @@ public class FrontendController {
 
     static final String RESPONSE_QUEUE_NAME = "work-queue/responses";
 
-    static final String UPDATE_QUEUE_NAME = "work-queue/worker-updates";
+    private static final String UPDATE_TOPIC_NAME = "work-queue/worker-updates";
 
     private final Logger logger = LoggerFactory.getLogger(FrontendController.class);
 
@@ -65,7 +65,7 @@ public class FrontendController {
     }
 
     @GetMapping(path = "/api/receive-response", produces = "application/json; charset=utf-8")
-    public ResponseEntity<Response> getResponse(@PathVariable("request") String requestId) {
+    public ResponseEntity<Response> getResponse(@RequestParam("request") String requestId) {
         Response response = data.getResponses().get(requestId);
 
         if (response == null) {
@@ -108,7 +108,7 @@ public class FrontendController {
         logger.info("{}: Received {}", id, response);
     }
 
-    @JmsListener(destination = UPDATE_QUEUE_NAME)
+    @JmsListener(destination = UPDATE_TOPIC_NAME, containerFactory = "topicJmsListenerContainerFactory")
     public void handleWorkerUpdate(Message<String> message) {
         WorkerUpdate workerUpdate = new WorkerUpdate(message.getHeaders());
         data.getWorkers().put(workerUpdate.getWorkerId(), workerUpdate);

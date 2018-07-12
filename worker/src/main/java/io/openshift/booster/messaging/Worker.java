@@ -19,14 +19,19 @@ package io.openshift.booster.messaging;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSContext;
+import javax.jms.JMSException;
+import javax.jms.JMSProducer;
 import javax.jms.TextMessage;
+import javax.jms.Topic;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -34,13 +39,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class Worker {
 
-    static final String REQUEST_QUEUE_NAME = "work-queue/requests";
+    static final String UPDATE_TOPIC_NAME = "work-queue/worker-updates";
 
-    static final String UPDATE_QUEUE_NAME = "work-queue/worker-updates";
+    private static final String REQUEST_QUEUE_NAME = "work-queue/requests";
 
     private final Logger logger = LoggerFactory.getLogger(Worker.class);
 
-    private final JmsTemplate jmsTemplate;
+    private final ConnectionFactory connectionFactory;
 
     private final String id;
 
@@ -49,15 +54,15 @@ public class Worker {
     private final AtomicInteger processingErrors;
 
     @Autowired
-    public Worker(JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
+    public Worker(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
         this.id = "worker-spring-" + UUID.randomUUID().toString().substring(0, 4);
         this.requestsProcessed = new AtomicInteger(0);
         this.processingErrors = new AtomicInteger(0);
     }
 
-    Worker(JmsTemplate jmsTemplate, String id, AtomicInteger requestsProcessed, AtomicInteger processingErrors) {
-        this.jmsTemplate = jmsTemplate;
+    Worker(ConnectionFactory connectionFactory, String id, AtomicInteger requestsProcessed, AtomicInteger processingErrors) {
+        this.connectionFactory = connectionFactory;
         this.id = id;
         this.requestsProcessed = requestsProcessed;
         this.processingErrors = processingErrors;
@@ -85,22 +90,28 @@ public class Worker {
     }
 
     @Scheduled(fixedRate = 5 * 1000)
-    public void sendStatusUpdate() {
+    public void sendStatusUpdate() throws JMSException {
         logger.debug("{}: Sending status update", id);
 
-        jmsTemplate.send(UPDATE_QUEUE_NAME, session -> {
-            TextMessage message = session.createTextMessage();
+        try (JMSContext jmsContext = connectionFactory.createContext()) {
+            TextMessage message = jmsContext.createTextMessage();
             message.setStringProperty(WorkerHeaders.WORKER_ID, id);
             message.setLongProperty(WorkerHeaders.REQUESTS_PROCESSED, requestsProcessed.get());
             message.setLongProperty(WorkerHeaders.PROCESSING_ERRORS, processingErrors.get());
-            return message;
-        });
+
+            JMSProducer producer = jmsContext.createProducer();
+
+            Topic topic = jmsContext.createTopic(UPDATE_TOPIC_NAME);
+            producer.send(topic, message);
+        }
     }
 
     private String processRequest(Message<String> request) {
-        boolean uppercase = request.getHeaders().get(WorkerHeaders.UPPERCASE, Boolean.class);
-        boolean reverse = request.getHeaders().get(WorkerHeaders.REVERSE, Boolean.class);
         String text = request.getPayload();
+
+        MessageHeaders headers = request.getHeaders();
+        boolean uppercase = headers.get(WorkerHeaders.UPPERCASE, Boolean.class);
+        boolean reverse = headers.get(WorkerHeaders.REVERSE, Boolean.class);
 
         logger.info("{}: Processing request: text='{}', uppercase='{}', reverse='{}'", id, text, uppercase, reverse);
 

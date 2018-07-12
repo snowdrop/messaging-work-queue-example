@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Red Hat, Inc, and individual contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.openshift.booster.messaging;
 
 import java.util.Map;
@@ -19,6 +35,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 
+import static io.openshift.booster.messaging.FrontendController.REQUEST_QUEUE_NAME;
 import static io.openshift.booster.messaging.FrontendController.RESPONSE_QUEUE_NAME;
 import static io.openshift.booster.messaging.FrontendHeaders.PROCESSING_ERRORS;
 import static io.openshift.booster.messaging.FrontendHeaders.REQUESTS_PROCESSED;
@@ -33,6 +50,12 @@ import static org.springframework.jms.support.JmsHeaders.CORRELATION_ID;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FrontendControllerTest {
+
+    private static final String TEST_TEXT = "test-text";
+
+    private static final String TEST_WORKER_ID = "test-worker-id";
+
+    private static final String TEST_REQUEST_ID = "test-request-id";
 
     @Mock
     private ConnectionFactory mockConnectionFactory;
@@ -73,7 +96,7 @@ public class FrontendControllerTest {
 
     @Test
     public void shouldFailToGetResponse() {
-        ResponseEntity<Response> responseEntity = controller.getResponse("test");
+        ResponseEntity<Response> responseEntity = controller.getResponse(TEST_REQUEST_ID);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -81,55 +104,58 @@ public class FrontendControllerTest {
     @Test
     public void shouldSendRequest() throws JMSException {
         given(mockConnectionFactory.createContext()).willReturn(mockJmsContext);
-        given(mockJmsContext.createTextMessage("test-text")).willReturn(mockTextMessage);
+        given(mockJmsContext.createTextMessage(TEST_TEXT)).willReturn(mockTextMessage);
         given(mockJmsContext.createQueue(RESPONSE_QUEUE_NAME)).willReturn(mockQueue);
+        given(mockJmsContext.createQueue(REQUEST_QUEUE_NAME)).willReturn(mockQueue);
         given(mockJmsContext.createProducer()).willReturn(mockJmsProducer);
-        given(mockTextMessage.getJMSMessageID()).willReturn("test-request-id");
+        given(mockTextMessage.getJMSMessageID()).willReturn(TEST_REQUEST_ID);
 
         Request request = new Request();
-        request.setText("test-text");
+        request.setText(TEST_TEXT);
         request.setUppercase(true);
         request.setReverse(true);
         ResponseEntity<String> responseEntity = controller.sendRequest(request);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
-        assertThat(responseEntity.getBody()).isEqualTo("test-request-id");
-        assertThat(controller.getData().getRequestIds()).containsOnly("test-request-id");
+        assertThat(responseEntity.getBody()).isEqualTo(TEST_REQUEST_ID);
+        assertThat(controller.getData().getRequestIds()).containsOnly(TEST_REQUEST_ID);
 
         verify(mockTextMessage).setBooleanProperty(UPPERCASE, true);
         verify(mockTextMessage).setBooleanProperty(REVERSE, true);
         verify(mockTextMessage).setJMSReplyTo(mockQueue);
+
+        verify(mockJmsProducer).send(mockQueue, mockTextMessage);
     }
 
     @Test
     public void shouldHandleResponse() {
-        given(mockMessage.getPayload()).willReturn("test-body");
+        given(mockMessage.getPayload()).willReturn(TEST_TEXT);
         given(mockMessage.getHeaders()).willReturn(mockMessageHeaders);
-        given(mockMessageHeaders.get(WORKER_ID, String.class)).willReturn("test-worker-id");
-        given(mockMessageHeaders.get(CORRELATION_ID, String.class)).willReturn("test-request-id");
+        given(mockMessageHeaders.get(WORKER_ID, String.class)).willReturn(TEST_WORKER_ID);
+        given(mockMessageHeaders.get(CORRELATION_ID, String.class)).willReturn(TEST_REQUEST_ID);
 
         controller.handleResponse(mockMessage);
-        Response response = controller.getData().getResponses().get("test-request-id");
+        Response response = controller.getData().getResponses().get(TEST_REQUEST_ID);
 
         assertThat(response).isNotNull();
-        assertThat(response.getWorkerId()).isEqualTo("test-worker-id");
-        assertThat(response.getRequestId()).isEqualTo("test-request-id");
-        assertThat(response.getText()).isEqualTo("test-body");
+        assertThat(response.getWorkerId()).isEqualTo(TEST_WORKER_ID);
+        assertThat(response.getRequestId()).isEqualTo(TEST_REQUEST_ID);
+        assertThat(response.getText()).isEqualTo(TEST_TEXT);
     }
 
     @Test
     public void shouldHandleWorkerUpdate() {
         given(mockMessage.getHeaders()).willReturn(mockMessageHeaders);
-        given(mockMessageHeaders.get(WORKER_ID, String.class)).willReturn("test-worker-id");
+        given(mockMessageHeaders.get(WORKER_ID, String.class)).willReturn(TEST_WORKER_ID);
         given(mockMessageHeaders.get(TIMESTAMP, Long.class)).willReturn(1L);
         given(mockMessageHeaders.get(REQUESTS_PROCESSED, Long.class)).willReturn(2L);
         given(mockMessageHeaders.get(PROCESSING_ERRORS, Long.class)).willReturn(3L);
 
         controller.handleWorkerUpdate(mockMessage);
-        WorkerUpdate workerUpdate = controller.getData().getWorkers().get("test-worker-id");
+        WorkerUpdate workerUpdate = controller.getData().getWorkers().get(TEST_WORKER_ID);
 
         assertThat(workerUpdate).isNotNull();
-        assertThat(workerUpdate.getWorkerId()).isEqualTo("test-worker-id");
+        assertThat(workerUpdate.getWorkerId()).isEqualTo(TEST_WORKER_ID);
         assertThat(workerUpdate.getTimestamp()).isEqualTo(1L);
         assertThat(workerUpdate.getRequestsProcessed()).isEqualTo(2L);
         assertThat(workerUpdate.getProcessingErrors()).isEqualTo(3L);

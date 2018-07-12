@@ -3,7 +3,11 @@
             xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
   <extension qualifier="openshift">
-    <property name="enableImageStreamDetection">true</property>
-    <property name="env.dependencies">file://${basedir}/target/test-classes/amq63.yml</property>
+    <property name="namespace.use.current">true</property>
+    <property name="env.init.enabled">true</property>
+    <property name="enableImageStreamDetection">false</property>
+    <property name="env.dependencies">
+      file://${basedir}/target/test-classes/amq63-is.yaml,file://${basedir}/target/test-classes/amq63.yaml
+    </property>
   </extension>
 </arquillian>

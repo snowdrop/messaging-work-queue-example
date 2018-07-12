@@ -20,6 +20,7 @@
     <amqphub.version>0.4.0</amqphub.version>
     <artemis.version>1.5.6</artemis.version>
     <arquillian.version>1.4.0.Final</arquillian.version>
+    <commons-logging.version>1.2</commons-logging.version>
     <rest-assured.version>3.1.0</rest-assured.version>
     <spring-boot.version>1.5.14.RELEASE</spring-boot.version>
     <spring-boot-bom.version>1.5.14.Final</spring-boot-bom.version>
@@ -70,6 +71,11 @@
         <groupId>io.rest-assured</groupId>
         <artifactId>rest-assured</artifactId>
         <version>${rest-assured.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>${commons-logging.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

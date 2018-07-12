@@ -45,4 +45,15 @@ public class FrontendApplication {
         return listenerFactory;
     }
 
+    @Bean(name = "topicJmsListenerContainerFactory")
+    public DefaultJmsListenerContainerFactory topicJmsListenerContainerFactory(ConnectionFactory connectionFactory,
+            DefaultJmsListenerContainerFactoryConfigurer configurer) {
+        DefaultJmsListenerContainerFactory listenerFactory = new DefaultJmsListenerContainerFactory();
+        configurer.configure(listenerFactory, connectionFactory);
+        listenerFactory.setTransactionManager(null);
+        listenerFactory.setSessionTransacted(false);
+        listenerFactory.setPubSubDomain(true);
+        return listenerFactory;
+    }
+
 }

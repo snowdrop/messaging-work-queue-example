@@ -16,18 +16,18 @@
 
 package io.openshift.booster.messaging;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+public final class FrontendHeaders {
 
-@ConfigurationProperties(prefix = "worker")
-public class WorkerProperties {
+    public static String WORKER_ID = "workerId";
 
-    private String id;
+    public static String TIMESTAMP = "timestamp";
 
-    public String getId() {
-        return id;
-    }
+    public static String REQUESTS_PROCESSED = "requestsProcessed";
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public static String PROCESSING_ERRORS = "processingErrors";
+
+    public static String UPPERCASE = "uppercase";
+
+    public static String REVERSE = "reverse";
+
 }

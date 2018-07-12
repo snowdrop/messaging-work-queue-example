@@ -40,8 +40,8 @@ oc new-app --template=vertx-messaging-work-queue-worker
 Run the following commands to configure and deploy the applications.
 
 ```bash
-oc apply -f templates/amq63-basic.yaml
 oc apply -f templates/amq63-is.yaml
+oc apply -f templates/amq63-basic.yaml
 
 oc new-app --template=amq63-basic \
   -p APPLICATION_NAME=work-queue-broker \

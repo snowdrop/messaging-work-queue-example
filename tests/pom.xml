@@ -5,22 +5,29 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.openshift.booster</groupId>
-    <artifactId>spring-boot-messaging-booster-parent</artifactId>
-    <version>1.5.12-1-SNAPSHOT</version>
+    <artifactId>spring-boot-messaging-work-queue-parent</artifactId>
+    <version>1.5.14-1-SNAPSHOT</version>
   </parent>
 
   <artifactId>spring-boot-messaging-booster-tests</artifactId>
 
+  <name>Spring Boot - Messaging - Work Queue Booster - Integration Tests</name>
+
   <dependencies>
     <dependency>
-      <groupId>io.openshift.booster</groupId>
-      <artifactId>spring-boot-messaging-booster-dashboard</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.openshift.booster</groupId>
-      <artifactId>spring-boot-messaging-booster-worker</artifactId>
-      <version>${project.version}</version>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.arquillian.junit</groupId>
@@ -31,21 +38,10 @@
       <groupId>org.arquillian.cube</groupId>
       <artifactId>arquillian-cube-openshift</artifactId>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>io.undertow</groupId>
-          <artifactId>undertow-core</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.arquillian.cube</groupId>
       <artifactId>arquillian-cube-requirement</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -95,42 +91,18 @@
               <skip>false</skip>
               <profile>aggregate</profile>
             </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy-image-streams</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${project.build.directory}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${project.parent.basedir}/templates</directory>
-                      <includes>
-                        <include>*-is.yml</include>
-                      </includes>
-                    </resource>
-                    <resource>
-                      <directory>${project.parent.basedir}/dashboard/target</directory>
-                      <includes>
-                        <include>*-is.yml</include>
-                      </includes>
-                    </resource>
-                    <resource>
-                      <directory>${project.parent.basedir}/worker/target</directory>
-                      <includes>
-                        <include>*-is.yml</include>
-                      </includes>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>io.openshift.booster</groupId>
+                <artifactId>spring-boot-messaging-work-queue-frontend</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>io.openshift.booster</groupId>
+                <artifactId>spring-boot-messaging-work-queue-worker</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+            </dependencies>
           </plugin>
         </plugins>
       </build>
