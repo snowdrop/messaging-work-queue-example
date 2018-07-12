@@ -61,7 +61,8 @@ public class Worker {
         this.processingErrors = new AtomicInteger(0);
     }
 
-    Worker(ConnectionFactory connectionFactory, String id, AtomicInteger requestsProcessed, AtomicInteger processingErrors) {
+    Worker(ConnectionFactory connectionFactory, String id, AtomicInteger requestsProcessed,
+            AtomicInteger processingErrors) {
         this.connectionFactory = connectionFactory;
         this.id = id;
         this.requestsProcessed = requestsProcessed;

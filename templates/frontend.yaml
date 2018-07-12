@@ -115,8 +115,8 @@ objects:
               fieldRef:
                 fieldPath: metadata.namespace
           envFrom:
-            - configMapRef:
-                name: messaging-service
+          - configMapRef:
+              name: messaging-service
           image: spring-boot-messaging-work-queue-frontend:latest
           imagePullPolicy: IfNotPresent
           livenessProbe:

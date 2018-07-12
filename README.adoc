@@ -52,7 +52,7 @@ oc new-app --template=amq63-basic \
   -p MQ_USERNAME=work-queue \
   -p MQ_PASSWORD=work-queue
 
-mvn clean fabric8:deploy -Popenshift
+./mvnw clean fabric8:deploy -Popenshift
 ```
 
 ## Modules

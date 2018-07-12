@@ -204,13 +204,13 @@ objects:
         - name: "${APPLICATION_NAME}-amq"
           image: jboss-amq-63
           imagePullPolicy: Always
-#          TODO Probe keeps failing on OpenShift
-#          readinessProbe:
-#            exec:
-#              command:
-#              - "/bin/bash"
-#              - "-c"
-#              - "/opt/amq/bin/readinessProbe.sh"
+          #          TODO Probe keeps failing on OpenShift
+          #          readinessProbe:
+          #            exec:
+          #              command:
+          #              - "/bin/bash"
+          #              - "-c"
+          #              - "/opt/amq/bin/readinessProbe.sh"
           ports:
           - name: jolokia
             containerPort: 8778
