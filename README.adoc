@@ -31,8 +31,8 @@ oc new-app --template=amq63-basic \
   -p MQ_USERNAME=work-queue \
   -p MQ_PASSWORD=work-queue
 
-oc new-app --template=vertx-messaging-work-queue-frontend
-oc new-app --template=vertx-messaging-work-queue-worker
+oc new-app --template=spring-boot-messaging-work-queue-frontend
+oc new-app --template=spring-boot-messaging-work-queue-worker
 ```
 
 ### With FMP
