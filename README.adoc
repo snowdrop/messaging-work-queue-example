@@ -13,13 +13,20 @@ message protocol to send and receive messages.
 * The user has selected a project in which the frontend and backend
   processes will be deployed.
 
+## Modules
+
+The `frontend` module serves the web interface and communicates with
+workers in the backend.
+
+The `worker` module implements the worker service in the backend.
+
 ## Deployment
 
 ### From a template
 
 Deploy AMQ broker:
 ```bash
-oc apply -f ./.openshiftio/service.yaml
+oc apply -f ./service.yaml
 
 oc new-app --template=amq63-basic \
   -p APPLICATION_NAME=work-queue-broker \
@@ -56,7 +63,7 @@ oc new-app --template=spring-boot-messaging-work-queue-worker \
 Run the following commands to configure and deploy the applications.
 
 ```bash
-oc apply -f ./.openshiftio/service.yaml
+oc apply -f ./service.yaml
 
 oc new-app --template=amq63-basic \
   -p APPLICATION_NAME=work-queue-broker \
@@ -70,9 +77,13 @@ oc new-app --template=amq63-basic \
 ./mvnw clean fabric8:deploy -Popenshift
 ```
 
-## Modules
+## Running integration tests
 
-The `frontend` module serves the web interface and communicates with
-workers in the backend.
+Note: integration tests are executed on a current namespace, so make sure to not run them in a production environment.
+Tests will deploy their own broker which might override the existing one.
 
-The `worker` module implements the worker service in the backend.
+To execute the tests run the following command:
+```bash
+./mvnw clean verify -Popenshift,openshift-it
+```
+
