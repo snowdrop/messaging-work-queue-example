@@ -8,6 +8,11 @@ metadata:
     template.openshift.io/provider-display-name: "Red Hat, Inc."
     description: The Spring Boot Work Queue Mission demonstrates scalable task processing using messaging
 parameters:
+- name: RUNTIME_VERSION
+  displayName: OpenJDK 8 image version to use
+  description: Specifies which version of the OpenShift OpenJDK 8 image to use
+  value: 1.3-8
+  required: true
 - name: SOURCE_REPOSITORY_URL
   description: The source URL for the application
   displayName: Source URL
@@ -21,7 +26,12 @@ parameters:
 - name: SOURCE_REPOSITORY_DIR
   description: The location within the source repo of the application
   displayName: Source Directory
-  value: worker
+  value: .
+  required: true
+- name: ARTIFACT_COPY_ARGS
+  description: Syntax to be used to copy uberjar files to the target directory
+  displayName: Copy Args
+  value: '*.jar'
   required: true
 - name: GITHUB_WEBHOOK_SECRET
   description: A secret string used to configure the GitHub webhook.
@@ -29,6 +39,10 @@ parameters:
   required: true
   from: '[a-zA-Z0-9]{40}'
   generate: expression
+- name: MAVEN_MIRROR_URL
+  description: Maven Nexus Repository to be used during build phase
+  displayName:
+  required: false
 objects:
 - apiVersion: v1
   kind: ImageStream
@@ -45,21 +59,24 @@ objects:
     name: runtime-spring-boot-messaging-work-queue-worker
   spec:
     tags:
-    - name: latest
+    - name: "${RUNTIME_VERSION}"
       from:
         kind: DockerImage
-        name: registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift
+        name: registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:${RUNTIME_VERSION}
 - apiVersion: v1
   kind: BuildConfig
   metadata:
     labels:
       app: spring-boot-messaging-work-queue-worker
+      provider: snowdrop
+      version: "BOOSTER_VERSION"
+      group: io.openshift.booster
     name: spring-boot-messaging-work-queue-worker
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: spring-boot-messaging-work-queue-worker:latest
+        name: spring-boot-messaging-work-queue-worker:BOOSTER_VERSION
     postCommit: {}
     resources: {}
     source:
@@ -71,13 +88,17 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: runtime-spring-boot-messaging-work-queue-worker:latest
+          name: runtime-spring-boot-messaging-work-queue-worker:${RUNTIME_VERSION}
         incremental: true
         env:
         - name: MAVEN_ARGS_APPEND
           value: "-pl ${SOURCE_REPOSITORY_DIR}"
         - name: ARTIFACT_DIR
           value: "${SOURCE_REPOSITORY_DIR}/target"
+        - name: MAVEN_MIRROR_URL
+          value: "${MAVEN_MIRROR_URL}"
+        - name: ARTIFACT_COPY_ARGS
+          value: "${ARTIFACT_COPY_ARGS}"
       type: Source
     triggers:
     - github:
@@ -93,6 +114,9 @@ objects:
   metadata:
     labels:
       app: spring-boot-messaging-work-queue-worker
+      provider: snowdrop
+      version: "BOOSTER_VERSION"
+      group: io.openshift.booster
     name: spring-boot-messaging-work-queue-worker
   spec:
     replicas: 1
@@ -107,6 +131,9 @@ objects:
       metadata:
         labels:
           app: spring-boot-messaging-work-queue-worker
+          provider: snowdrop
+          version: "BOOSTER_VERSION"
+          group: io.openshift.booster
       spec:
         containers:
         - env:
@@ -117,7 +144,7 @@ objects:
           envFrom:
           - configMapRef:
               name: messaging-service
-          image: spring-boot-messaging-work-queue-worker:latest
+          image: spring-boot-messaging-work-queue-worker:BOOSTER_VERSION
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -146,13 +173,16 @@ objects:
         - spring-boot-messaging-work-queue-worker
         from:
           kind: ImageStreamTag
-          name: spring-boot-messaging-work-queue-worker:latest
+          name: spring-boot-messaging-work-queue-worker:BOOSTER_VERSION
       type: ImageChange
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
       app: spring-boot-messaging-work-queue-worker
+      provider: snowdrop
+      version: "BOOSTER_VERSION"
+      group: io.openshift.booster
     name: spring-boot-messaging-work-queue-worker
   spec:
     ports:
