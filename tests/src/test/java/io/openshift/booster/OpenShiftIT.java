@@ -36,8 +36,8 @@ import static io.restassured.RestAssured.withArgs;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.not;
@@ -106,14 +106,14 @@ public class OpenShiftIT {
                         .get(dataUrl)
                         .then()
                         .statusCode(200)
-                        .body("requestIds", contains(requestId))
+                        .body("requestIds", hasItem(requestId))
                         .body("responses.%s.requestId", withArgs(requestId), is(equalTo(requestId)))
                         .body("responses.%s.workerId", withArgs(requestId), is(equalTo(workerId)))
                         .body("responses.%s.text", withArgs(requestId), is(equalTo(text)))
                         .body("workers.%s.workerId", withArgs(workerId), is(equalTo(workerId)))
                         .body("workers.%s.timestamp", withArgs(workerId), is(notNullValue()))
-                        .body("workers.%s.requestsProcessed", withArgs(workerId), is(equalTo(1)))
-                        .body("workers.%s.processingErrors", withArgs(workerId), is(equalTo(0))));
+                        .body("workers.%s.requestsProcessed", withArgs(workerId), is(notNullValue()))
+                        .body("workers.%s.processingErrors", withArgs(workerId), is(notNullValue())));
     }
 
 }

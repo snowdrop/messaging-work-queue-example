@@ -74,7 +74,7 @@
 
   <profiles>
     <profile>
-      <id>openshift-it</id>
+      <id>openshift</id>
       <build>
         <plugins>
           <plugin>
@@ -103,6 +103,15 @@
                 <version>${project.version}</version>
               </dependency>
             </dependencies>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <env.dependencies>file://${basedir}/target/test-classes/amq63.yaml</env.dependencies>
+              </systemPropertyVariables>
+            </configuration>
           </plugin>
         </plugins>
       </build>
