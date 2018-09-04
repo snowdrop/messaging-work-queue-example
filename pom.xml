@@ -17,7 +17,7 @@
   <name>Spring Boot - Messaging - Work Queue Booster - Parent</name>
 
   <properties>
-    <amqphub.version>0.4.0</amqphub.version>
+    <amqphub.version>1.0.0</amqphub.version>
     <artemis.version>1.5.6</artemis.version>
     <arquillian.version>1.4.0.Final</arquillian.version>
     <commons-logging.version>1.2</commons-logging.version>
