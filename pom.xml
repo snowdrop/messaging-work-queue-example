@@ -11,7 +11,7 @@
 
   <groupId>io.openshift.booster</groupId>
   <artifactId>spring-boot-messaging-work-queue-parent</artifactId>
-  <version>2.1.2-5-SNAPSHOT</version>
+  <version>2.1.2-5-redhat</version>
   <packaging>pom</packaging>
 
   <name>Spring Boot - Messaging - Work Queue Booster - Parent</name>
@@ -23,7 +23,7 @@
     <commons-logging.version>1.2</commons-logging.version>
     <rest-assured.version>3.1.0</rest-assured.version>
     <spring-boot.version>2.1.2.RELEASE</spring-boot.version>
-    <spring-boot-bom.version>2.1.2.Final</spring-boot-bom.version>
+    <spring-boot-bom.version>2.1.2.Final-redhat-00003</spring-boot-bom.version>
   </properties>
 
   <dependencyManagement>
