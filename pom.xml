@@ -3,11 +3,6 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>io.openshift</groupId>
-    <artifactId>booster-parent</artifactId>
-    <version>23</version>
-  </parent>
 
   <groupId>io.openshift.booster</groupId>
   <artifactId>spring-boot-messaging-work-queue-parent</artifactId>
@@ -17,13 +12,28 @@
   <name>Spring Boot - Messaging - Work Queue Booster - Parent</name>
 
   <properties>
-    <amqphub.version>1.0.0</amqphub.version>
-    <artemis.version>1.5.6</artemis.version>
-    <arquillian.version>1.4.0.Final</arquillian.version>
-    <commons-logging.version>1.2</commons-logging.version>
-    <rest-assured.version>3.1.0</rest-assured.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <maven.min.version>3.3.9</maven.min.version>
+    <jdk.min.version>${maven.compiler.source}</jdk.min.version>
+
+    <fabric8-maven-plugin.version>3.5.41</fabric8-maven-plugin.version>
+    <maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
+    <maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
+
+    <arquillian.version>1.4.1.Final</arquillian.version>
+    <arquillian-cube.version>1.18.2</arquillian-cube.version>
+    <rest-assured.version>3.3.0</rest-assured.version>
     <spring-boot.version>2.1.3.RELEASE</spring-boot.version>
-    <spring-boot-bom.version>2.1.3.Beta1</spring-boot-bom.version>
+    <spring-boot-bom.version>2.1.3.Final</spring-boot-bom.version>
+    <validation-api.version>2.0.1.Final</validation-api.version>
+
+    <fabric8.generator.from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5</fabric8.generator.from>
+    <fabric8.openshift.trimImageInContainerSpec>true</fabric8.openshift.trimImageInContainerSpec>
+    <fabric8.skip.build.pom>true</fabric8.skip.build.pom>
   </properties>
 
   <dependencyManagement>
@@ -43,45 +53,37 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-artemis</artifactId>
-        <version>${spring-boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.activemq</groupId>
-        <artifactId>artemis-jms-server</artifactId>
-        <version>${artemis.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.activemq</groupId>
-        <artifactId>artemis-amqp-protocol</artifactId>
-        <version>${artemis.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.amqphub.spring</groupId>
-        <artifactId>amqp-10-jms-spring-boot-starter</artifactId>
-        <version>${amqphub.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.arquillian.cube</groupId>
-        <artifactId>arquillian-cube-requirement</artifactId>
+        <artifactId>arquillian-cube-bom</artifactId>
         <version>${arquillian-cube.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
       </dependency>
       <dependency>
         <groupId>io.rest-assured</groupId>
         <artifactId>rest-assured</artifactId>
         <version>${rest-assured.version}</version>
       </dependency>
-      <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging</artifactId>
-        <version>${commons-logging.version}</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven-failsafe-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>${maven-install-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-maven-plugin</artifactId>
+        <version>${fabric8-maven-plugin.version}</version>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -114,6 +116,13 @@
                 </goals>
               </execution>
             </executions>
+            <dependencies>
+              <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${validation-api.version}</version>
+              </dependency>
+            </dependencies>
           </plugin>
         </plugins>
       </build>

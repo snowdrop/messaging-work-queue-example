@@ -49,7 +49,7 @@ import static org.hamcrest.Matchers.notNullValue;
 public class OpenShiftIT {
 
     @RouteURL("spring-boot-messaging-work-queue-frontend")
-    @AwaitRoute(path = "/health")
+    @AwaitRoute(path = "/actuator/health")
     private URL dashboardUrl;
 
     private URL dataUrl;

@@ -95,7 +95,7 @@ public class Worker {
         logger.debug("{}: Sending status update", id);
 
         try (JMSContext jmsContext = connectionFactory.createContext()) {
-            TextMessage message = jmsContext.createTextMessage();
+            javax.jms.Message message = jmsContext.createMessage();
             message.setStringProperty(WorkerHeaders.WORKER_ID, id);
             message.setLongProperty(WorkerHeaders.REQUESTS_PROCESSED, requestsProcessed.get());
             message.setLongProperty(WorkerHeaders.PROCESSING_ERRORS, processingErrors.get());

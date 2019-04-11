@@ -109,10 +109,10 @@ public class FrontendController {
     }
 
     @JmsListener(destination = UPDATE_TOPIC_NAME, containerFactory = "topicJmsListenerContainerFactory")
-    public void handleWorkerUpdate(Message<String> message) {
+    public void handleWorkerUpdate(Message message) {
         WorkerUpdate workerUpdate = new WorkerUpdate(message.getHeaders());
         data.getWorkers().put(workerUpdate.getWorkerId(), workerUpdate);
-        logger.debug("{}: Received {}", id, workerUpdate);
+        logger.debug("{}: Received {}", id, message);
     }
 
     @Scheduled(fixedRate = 5 * 1000)

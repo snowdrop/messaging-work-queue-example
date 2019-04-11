@@ -67,7 +67,7 @@ public class WorkerTest {
     private Message<String> mockMessage;
 
     @Mock
-    private TextMessage mockTextMessage;
+    private javax.jms.Message mockJmsMessage;
 
     @Mock
     private MessageHeaders mockMessageHeaders;
@@ -94,17 +94,17 @@ public class WorkerTest {
     @Test
     public void shouldSendStatusUpdate() throws JMSException {
         given(mockConnectionFactory.createContext()).willReturn(mockJmsContext);
-        given(mockJmsContext.createTextMessage()).willReturn(mockTextMessage);
+        given(mockJmsContext.createMessage()).willReturn(mockJmsMessage);
         given(mockJmsContext.createProducer()).willReturn(mockJmsProducer);
         given(mockJmsContext.createTopic(UPDATE_TOPIC_NAME)).willReturn(mockTopic);
 
         Worker worker = new Worker(mockConnectionFactory, TEST_WORKER_ID, new AtomicInteger(1), new AtomicInteger(2));
         worker.sendStatusUpdate();
 
-        verify(mockTextMessage).setStringProperty(WORKER_ID, TEST_WORKER_ID);
-        verify(mockTextMessage).setLongProperty(REQUESTS_PROCESSED, 1);
-        verify(mockTextMessage).setLongProperty(PROCESSING_ERRORS, 2);
-        verify(mockJmsProducer).send(mockTopic, mockTextMessage);
+        verify(mockJmsMessage).setStringProperty(WORKER_ID, TEST_WORKER_ID);
+        verify(mockJmsMessage).setLongProperty(REQUESTS_PROCESSED, 1);
+        verify(mockJmsMessage).setLongProperty(PROCESSING_ERRORS, 2);
+        verify(mockJmsProducer).send(mockTopic, mockJmsMessage);
     }
 
 }
