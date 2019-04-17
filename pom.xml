@@ -20,7 +20,7 @@
     <maven.min.version>3.3.9</maven.min.version>
     <jdk.min.version>${maven.compiler.source}</jdk.min.version>
 
-    <fabric8-maven-plugin.version>4.0.0-M2</fabric8-maven-plugin.version>
+    <fabric8-maven-plugin.version>4.1.0</fabric8-maven-plugin.version>
     <maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
     <maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
 
