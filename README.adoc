@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This mission booster demonstrates how to dispatch tasks to a scalable
+This mission example demonstrates how to dispatch tasks to a scalable
 set of worker processes using a message queue. It uses the AMQP 1.0
 message protocol to send and receive messages.
 
@@ -42,7 +42,7 @@ Deploy frontend:
 oc apply -f ./frontend/.openshiftio/application.yaml
 
 oc new-app --template=spring-boot-messaging-work-queue-frontend \
-  -p SOURCE_REPOSITORY_URL=https://github.com/snowdrop/spring-boot-messaging-work-queue-booster \
+  -p SOURCE_REPOSITORY_URL=https://github.com/snowdrop/messaging-work-queue-example \
   -p SOURCE_REPOSITORY_REF=master \
   -p SOURCE_REPOSITORY_DIR=frontend
 ```
@@ -52,7 +52,7 @@ Deploy worker:
 oc apply -f ./worker/.openshiftio/application.yaml
 
 oc new-app --template=spring-boot-messaging-work-queue-worker \
-  -p SOURCE_REPOSITORY_URL=https://github.com/snowdrop/spring-boot-messaging-work-queue-booster \
+  -p SOURCE_REPOSITORY_URL=https://github.com/snowdrop/messaging-work-queue-example \
   -p SOURCE_REPOSITORY_REF=master \
   -p SOURCE_REPOSITORY_DIR=worker
 ```
