@@ -16,7 +16,7 @@ parameters:
 - name: SOURCE_REPOSITORY_URL
   description: The source URL for the application
   displayName: Source URL
-  value: https://github.com/snowdrop/spring-boot-messaging-work-queue-booster
+  value: https://github.com/snowdrop/messaging-work-queue-example
   required: true
 - name: SOURCE_REPOSITORY_REF
   description: The branch name for the application
@@ -70,7 +70,7 @@ objects:
       app: spring-boot-messaging-work-queue-worker
       provider: snowdrop
       version: "BOOSTER_VERSION"
-      group: io.openshift.booster
+      group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-worker
   spec:
     output:
@@ -116,7 +116,7 @@ objects:
       app: spring-boot-messaging-work-queue-worker
       provider: snowdrop
       version: "BOOSTER_VERSION"
-      group: io.openshift.booster
+      group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-worker
   spec:
     replicas: 1
@@ -133,7 +133,7 @@ objects:
           app: spring-boot-messaging-work-queue-worker
           provider: snowdrop
           version: "BOOSTER_VERSION"
-          group: io.openshift.booster
+          group: dev.snowdrop.example
       spec:
         containers:
         - env:
@@ -182,7 +182,7 @@ objects:
       app: spring-boot-messaging-work-queue-worker
       provider: snowdrop
       version: "BOOSTER_VERSION"
-      group: io.openshift.booster
+      group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-worker
   spec:
     ports:

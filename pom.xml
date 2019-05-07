@@ -9,12 +9,12 @@
     <version>23</version>
   </parent>
 
-  <groupId>io.openshift.booster</groupId>
-  <artifactId>spring-boot-messaging-work-queue-parent</artifactId>
+  <groupId>dev.snowdrop.example</groupId>
+  <artifactId>messaging-work-queue</artifactId>
   <version>1.5.19-3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Spring Boot - Messaging - Work Queue Booster - Parent</name>
+  <name>Spring Boot - Messaging - Work Queue Example - Parent</name>
 
   <properties>
     <amqphub.version>1.0.0</amqphub.version>

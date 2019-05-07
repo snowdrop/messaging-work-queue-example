@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.openshift.booster</groupId>
-    <artifactId>spring-boot-messaging-work-queue-parent</artifactId>
+    <groupId>dev.snowdrop.example</groupId>
+    <artifactId>messaging-work-queue</artifactId>
     <version>1.5.19-3-SNAPSHOT</version>
   </parent>
 
   <artifactId>spring-boot-messaging-work-queue-worker</artifactId>
 
-  <name>Spring Boot - Messaging - Work Queue Booster - Worker</name>
+  <name>Spring Boot - Messaging - Work Queue Example - Worker</name>
 
   <dependencies>
     <!-- The next two starters allow automatic generation of liveness and readiness probes -->
