@@ -69,7 +69,7 @@ objects:
       app: spring-boot-messaging-work-queue-frontend
       provider: snowdrop
       version: "BOOSTER_VERSION"
-      group: io.openshift.booster
+      group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-frontend
   spec:
     output:
@@ -115,7 +115,7 @@ objects:
       app: spring-boot-messaging-work-queue-frontend
       provider: snowdrop
       version: "BOOSTER_VERSION"
-      group: io.openshift.booster
+      group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-frontend
   spec:
     replicas: 1
@@ -132,7 +132,7 @@ objects:
           app: spring-boot-messaging-work-queue-frontend
           provider: snowdrop
           version: "BOOSTER_VERSION"
-          group: io.openshift.booster
+          group: dev.snowdrop.example
       spec:
         containers:
         - env:
@@ -181,7 +181,7 @@ objects:
       app: spring-boot-messaging-work-queue-frontend
       provider: snowdrop
       version: "BOOSTER_VERSION"
-      group: io.openshift.booster
+      group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-frontend
   spec:
     ports:
@@ -196,7 +196,7 @@ objects:
       app: spring-boot-messaging-work-queue-frontend
       provider: snowdrop
       version: "BOOSTER_VERSION"
-      group: io.openshift.booster
+      group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-frontend
   spec:
     port:

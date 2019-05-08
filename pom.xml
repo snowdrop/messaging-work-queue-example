@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.openshift.booster</groupId>
-  <artifactId>spring-boot-messaging-work-queue-parent</artifactId>
+  <groupId>dev.snowdrop.example</groupId>
+  <artifactId>messaging-work-queue</artifactId>
   <version>2.1.3-3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Spring Boot - Messaging - Work Queue Booster - Parent</name>
+  <name>Spring Boot - Messaging - Work Queue Example - Parent</name>
 
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
