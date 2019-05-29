@@ -11,7 +11,7 @@
 
   <groupId>dev.snowdrop.example</groupId>
   <artifactId>messaging-work-queue</artifactId>
-  <version>1.5.19-3-SNAPSHOT</version>
+  <version>1.5.19-3-redhat</version>
   <packaging>pom</packaging>
 
   <name>Spring Boot - Messaging - Work Queue Example - Parent</name>
@@ -23,7 +23,7 @@
     <commons-logging.version>1.2</commons-logging.version>
     <rest-assured.version>3.1.0</rest-assured.version>
     <spring-boot.version>1.5.19.RELEASE</spring-boot.version>
-    <spring-boot-bom.version>1.5.19.Final</spring-boot-bom.version>
+    <spring-boot-bom.version>1.5.19.SP1-redhat-00003</spring-boot-bom.version>
   </properties>
 
   <dependencyManagement>
