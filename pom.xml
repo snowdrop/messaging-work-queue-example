@@ -11,7 +11,7 @@
 
   <groupId>dev.snowdrop.example</groupId>
   <artifactId>messaging-work-queue</artifactId>
-  <version>1.5.19-3-SNAPSHOT</version>
+  <version>1.5.19-3</version>
   <packaging>pom</packaging>
 
   <name>Spring Boot - Messaging - Work Queue Example - Parent</name>
