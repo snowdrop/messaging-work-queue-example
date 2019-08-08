@@ -68,14 +68,14 @@ objects:
     labels:
       app: spring-boot-messaging-work-queue-frontend
       provider: snowdrop
-      version: "BOOSTER_VERSION"
+      version: "2.1.6-4"
       group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-frontend
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: spring-boot-messaging-work-queue-frontend:BOOSTER_VERSION
+        name: spring-boot-messaging-work-queue-frontend:2.1.6-4
     postCommit: {}
     resources: {}
     source:
@@ -114,7 +114,7 @@ objects:
     labels:
       app: spring-boot-messaging-work-queue-frontend
       provider: snowdrop
-      version: "BOOSTER_VERSION"
+      version: "2.1.6-4"
       group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-frontend
   spec:
@@ -131,7 +131,7 @@ objects:
         labels:
           app: spring-boot-messaging-work-queue-frontend
           provider: snowdrop
-          version: "BOOSTER_VERSION"
+          version: "2.1.6-4"
           group: dev.snowdrop.example
       spec:
         containers:
@@ -143,7 +143,7 @@ objects:
           envFrom:
           - configMapRef:
               name: messaging-service
-          image: spring-boot-messaging-work-queue-frontend:BOOSTER_VERSION
+          image: spring-boot-messaging-work-queue-frontend:2.1.6-4
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -172,7 +172,7 @@ objects:
         - spring-boot-messaging-work-queue-frontend
         from:
           kind: ImageStreamTag
-          name: spring-boot-messaging-work-queue-frontend:BOOSTER_VERSION
+          name: spring-boot-messaging-work-queue-frontend:2.1.6-4
       type: ImageChange
 - apiVersion: v1
   kind: Service
@@ -180,7 +180,7 @@ objects:
     labels:
       app: spring-boot-messaging-work-queue-frontend
       provider: snowdrop
-      version: "BOOSTER_VERSION"
+      version: "2.1.6-4"
       group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-frontend
   spec:
@@ -195,7 +195,7 @@ objects:
     labels:
       app: spring-boot-messaging-work-queue-frontend
       provider: snowdrop
-      version: "BOOSTER_VERSION"
+      version: "2.1.6-4"
       group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-frontend
   spec:
