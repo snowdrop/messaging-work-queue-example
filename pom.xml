@@ -4,9 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>dev.snowdrop</groupId>
+    <artifactId>snowdrop-dependencies</artifactId>
+    <version>2.2.6-SNAPSHOT</version>
+  </parent>
+
   <groupId>dev.snowdrop.example</groupId>
   <artifactId>messaging-work-queue</artifactId>
-  <version>2.1.13-4-SNAPSHOT</version>
+  <version>2.2.6-1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Spring Boot - Messaging - Work Queue Example - Parent</name>
@@ -21,15 +27,9 @@
     <jdk.min.version>${maven.compiler.source}</jdk.min.version>
 
     <fabric8-maven-plugin.version>4.1.0</fabric8-maven-plugin.version>
-    <maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
-    <maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
 
     <arquillian.version>1.4.1.Final</arquillian.version>
     <arquillian-cube.version>1.18.2</arquillian-cube.version>
-    <rest-assured.version>3.3.0</rest-assured.version>
-    <spring-boot.version>2.1.13.RELEASE</spring-boot.version>
-    <spring-boot-bom.version>2.1.13.Beta1</spring-boot-bom.version>
-    <validation-api.version>2.0.1.Final</validation-api.version>
     <openjdk18-openshift.version>latest</openjdk18-openshift.version>
     <fabric8.generator.from>
       registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:${openjdk18-openshift.version}
@@ -40,13 +40,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>me.snowdrop</groupId>
-        <artifactId>spring-boot-bom</artifactId>
-        <version>${spring-boot-bom.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <dependency>
         <groupId>org.jboss.arquillian</groupId>
         <artifactId>arquillian-bom</artifactId>
@@ -61,35 +54,23 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
-      <dependency>
-        <groupId>io.rest-assured</groupId>
-        <artifactId>rest-assured</artifactId>
-        <version>${rest-assured.version}</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>fabric8-maven-plugin</artifactId>
+          <version>${fabric8-maven-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>${maven-failsafe-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-install-plugin</artifactId>
-        <version>${maven-install-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>fabric8-maven-plugin</artifactId>
-        <version>${fabric8-maven-plugin.version}</version>
-      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
         <executions>
           <execution>
             <goals>
@@ -100,31 +81,6 @@
       </plugin>
     </plugins>
   </build>
-
-  <repositories>
-    <repository>
-      <id>redhat-early-access</id>
-      <name>Red Hat Early Access Repository</name>
-      <url>https://maven.repository.redhat.com/earlyaccess/all/</url>
-    </repository>
-    <repository>
-      <id>redhat-ga</id>
-      <name>Red Hat GA Repository</name>
-      <url>https://maven.repository.redhat.com/ga/</url>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>redhat-early-access</id>
-      <name>Red Hat Early Access Repository</name>
-      <url>https://maven.repository.redhat.com/earlyaccess/all/</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>redhat-ga</id>
-      <name>Red Hat GA Repository</name>
-      <url>https://maven.repository.redhat.com/ga/</url>
-    </pluginRepository>
-  </pluginRepositories>
 
   <profiles>
     <profile>
@@ -143,13 +99,6 @@
                 </goals>
               </execution>
             </executions>
-            <dependencies>
-              <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>${validation-api.version}</version>
-              </dependency>
-            </dependencies>
           </plugin>
         </plugins>
       </build>

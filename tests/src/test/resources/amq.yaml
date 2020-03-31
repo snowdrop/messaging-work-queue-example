@@ -105,3 +105,11 @@ spec:
           name: amq-broker-72-openshift:1.3
       type: ImageChange
     - type: ConfigChange
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: messaging-service
+data:
+  MESSAGING_SERVICE_HOST: work-queue-broker-amq-amqp
+  MESSAGING_SERVICE_PORT: "5672"

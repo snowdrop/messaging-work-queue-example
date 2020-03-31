@@ -2,8 +2,14 @@ spec:
   template:
     spec:
       containers:
-      - env:
-        - name: MESSAGING_SERVICE_HOST
-          value: work-queue-broker-amq-amqp
-        - name: MESSAGING_SERVICE_PORT
-          value: 5672
+        - env:
+            - name: MESSAGING_SERVICE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: messaging-service
+                  key: MESSAGING_SERVICE_HOST
+            - name: MESSAGING_SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: messaging-service
+                  key: MESSAGING_SERVICE_PORT
