@@ -26,7 +26,7 @@
     <maven.min.version>3.3.9</maven.min.version>
     <jdk.min.version>${maven.compiler.source}</jdk.min.version>
 
-    <fabric8-maven-plugin.version>4.1.0</fabric8-maven-plugin.version>
+    <fabric8-maven-plugin.version>4.4.0</fabric8-maven-plugin.version>
 
     <arquillian.version>1.4.1.Final</arquillian.version>
     <arquillian-cube.version>1.18.2</arquillian-cube.version>
