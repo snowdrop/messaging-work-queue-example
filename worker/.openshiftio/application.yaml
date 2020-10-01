@@ -69,14 +69,14 @@ objects:
     labels:
       app: spring-boot-messaging-work-queue-worker
       provider: snowdrop
-      version: "BOOSTER_VERSION"
+      version: "2.2.10-4"
       group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-worker
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: spring-boot-messaging-work-queue-worker:BOOSTER_VERSION
+        name: spring-boot-messaging-work-queue-worker:2.2.10-4
     postCommit: {}
     resources: {}
     source:
@@ -115,7 +115,7 @@ objects:
     labels:
       app: spring-boot-messaging-work-queue-worker
       provider: snowdrop
-      version: "BOOSTER_VERSION"
+      version: "2.2.10-4"
       group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-worker
   spec:
@@ -132,7 +132,7 @@ objects:
         labels:
           app: spring-boot-messaging-work-queue-worker
           provider: snowdrop
-          version: "BOOSTER_VERSION"
+          version: "2.2.10-4"
           group: dev.snowdrop.example
       spec:
         containers:
@@ -144,7 +144,7 @@ objects:
           envFrom:
           - configMapRef:
               name: messaging-service
-          image: spring-boot-messaging-work-queue-worker:BOOSTER_VERSION
+          image: spring-boot-messaging-work-queue-worker:2.2.10-4
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -173,7 +173,7 @@ objects:
         - spring-boot-messaging-work-queue-worker
         from:
           kind: ImageStreamTag
-          name: spring-boot-messaging-work-queue-worker:BOOSTER_VERSION
+          name: spring-boot-messaging-work-queue-worker:2.2.10-4
       type: ImageChange
 - apiVersion: v1
   kind: Service
@@ -181,7 +181,7 @@ objects:
     labels:
       app: spring-boot-messaging-work-queue-worker
       provider: snowdrop
-      version: "BOOSTER_VERSION"
+      version: "2.2.10-4"
       group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-worker
   spec:
