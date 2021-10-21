@@ -30,6 +30,8 @@
 
     <arquillian.version>1.4.1.Final</arquillian.version>
     <arquillian-cube.version>1.18.2</arquillian-cube.version>
+    <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
     <junit.version>4.13.2</junit.version>
     <ubi.version>1.3</ubi.version>
     <fabric8.generator.from>
@@ -111,6 +113,11 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+      </plugin>
     </plugins>
   </build>
 
@@ -142,6 +149,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
+            <version>${maven-failsafe-plugin.version}</version>
             <executions>
               <execution>
                 <goals>
