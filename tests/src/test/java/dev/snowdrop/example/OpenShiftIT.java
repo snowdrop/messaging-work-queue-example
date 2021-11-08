@@ -16,25 +16,23 @@
 
 package dev.snowdrop.example;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import io.dekorate.testing.annotation.Inject;
+import io.dekorate.testing.annotation.Named;
+import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.LocalPortForward;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import org.arquillian.cube.openshift.impl.enricher.AwaitRoute;
-import org.arquillian.cube.openshift.impl.enricher.RouteURL;
-import org.arquillian.cube.openshift.impl.requirement.RequiresOpenshift;
-import org.arquillian.cube.requirement.ArquillianConditionalRunner;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static io.restassured.RestAssured.withArgs;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
@@ -42,15 +40,23 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Category(RequiresOpenshift.class)
-@RequiresOpenshift
-@RunWith(ArquillianConditionalRunner.class)
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+@OpenshiftIntegrationTest(deployEnabled = false, buildEnabled = false)
 public class OpenShiftIT {
 
-    @RouteURL("spring-boot-messaging-work-queue-frontend")
-    @AwaitRoute(path = "/actuator/health")
-    private URL dashboardUrl;
+    @Inject
+    KubernetesClient client;
+
+    @Inject
+    @Named("spring-boot-messaging-work-queue-frontend")
+    Pod frontendPod;
+
+    LocalPortForward appPort;
 
     private URL dataUrl;
 
@@ -58,11 +64,20 @@ public class OpenShiftIT {
 
     private URL responseUrl;
 
-    @Before
+    @BeforeEach
     public void before() throws MalformedURLException {
+        appPort = client.pods().withName(frontendPod.getMetadata().getName()).portForward(8080);
+        URL dashboardUrl = new URL("http://localhost:" + appPort.getLocalPort());
         dataUrl = new URL(dashboardUrl, "api/data");
         requestUrl = new URL(dashboardUrl, "api/send-request");
         responseUrl = new URL(dashboardUrl, "api/receive-response");
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        if (appPort != null) {
+            appPort.close();
+        }
     }
 
     @Test
@@ -76,7 +91,7 @@ public class OpenShiftIT {
                 .post(requestUrl)
                 .thenReturn();
 
-        assertThat(requestResponse.getStatusCode()).isEqualTo(202);
+        assertEquals(202, requestResponse.getStatusCode());
         String requestId = requestResponse.getBody().asString();
 
         // Wait for the request to be handled

@@ -22,13 +22,12 @@ import javax.jms.ConnectionFactory;
 import javax.jms.JMSContext;
 import javax.jms.JMSException;
 import javax.jms.JMSProducer;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 
@@ -42,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class WorkerTest {
 
     private static final String TEST_TEXT = "test-text";
