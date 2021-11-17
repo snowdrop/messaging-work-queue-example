@@ -62,9 +62,11 @@ jobs:
             # deploy application
             oc new-project s2i
 
-            # deploy broker
-            oc apply -f ./service.yaml
+            # build modules (needed for testing)
+            ./mvnw -s .circleci/settings.xml -pl worker,frontend verify -Popenshift
 
+            # deploy broker
+            oc apply -f .openshiftio/amq.yaml
             oc new-app --template=amq-broker-72-basic -p APPLICATION_NAME=work-queue-broker -p IMAGE_STREAM_NAMESPACE=$(oc project -q) -p AMQ_NAME=work-queue-broker -p AMQ_PROTOCOL=amqp -p AMQ_USER=work-queue -p AMQ_PASSWORD=work-queue
 
             # deploy frontend
@@ -92,10 +94,11 @@ jobs:
             echo "Cleaned up s2i build"
 
       - run:
-          name: run tests against fmp build
+          name: run tests against Dekorate build
           command:  |
-            oc new-project fmp
-            .circleci/run_tests_with_fmp.sh -s .circleci/settings.xml
+            oc new-project dekorate
+
+            .circleci/run_tests_with_dekorate.sh -s .circleci/settings.xml
           no_output_timeout: 3600
 
 workflows:

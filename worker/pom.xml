@@ -32,31 +32,17 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <profiles>
     <profile>
       <id>openshift</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>fabric8-maven-plugin</artifactId>
-            <configuration>
-              <enricher>
-                <excludes>
-                  <exclude>fmp-openshift-route</exclude>
-                </excludes>
-              </enricher>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
+      <dependencies>
+        <dependency>
+          <groupId>io.dekorate</groupId>
+          <artifactId>openshift-spring-starter</artifactId>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 </project>

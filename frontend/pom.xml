@@ -31,10 +31,17 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>openshift</id>
+      <dependencies>
+        <dependency>
+          <groupId>io.dekorate</groupId>
+          <artifactId>openshift-spring-starter</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 </project>
