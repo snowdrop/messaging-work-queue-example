@@ -43,7 +43,7 @@ oc apply -f ./frontend/.openshiftio/application.yaml
 
 oc new-app --template=spring-boot-messaging-work-queue-frontend \
   -p SOURCE_REPOSITORY_URL=https://github.com/snowdrop/messaging-work-queue-example \
-  -p SOURCE_REPOSITORY_REF=master \
+  -p SOURCE_REPOSITORY_REF=sb-2.4.x \
   -p SOURCE_REPOSITORY_DIR=frontend
 ```
 
@@ -53,8 +53,13 @@ oc apply -f ./worker/.openshiftio/application.yaml
 
 oc new-app --template=spring-boot-messaging-work-queue-worker \
   -p SOURCE_REPOSITORY_URL=https://github.com/snowdrop/messaging-work-queue-example \
-  -p SOURCE_REPOSITORY_REF=master \
+  -p SOURCE_REPOSITORY_REF=sb-2.4.x \
   -p SOURCE_REPOSITORY_DIR=worker
+```
+
+Run tests:
+```bash
+sh run_tests_with_s2i.sh
 ```
 
 ### With Dekorate
@@ -80,15 +85,15 @@ Deploy frontend:
 
 Deploy worker:
 ```bash
-./mvnw clean verify -pl worker -Popenshift -Ddekorate.deploy=true 
+./mvnw clean verify -pl worker -Popenshift -Ddekorate.deploy=true
 ```
 
-## Running integration tests
+## Running integration tests using Dekorate
 
 Note: integration tests are executed on a current namespace, so make sure to not run them in a production environment.
 
 To execute the tests run the following command:
 ```bash
-./mvnw verify -pl tests -Popenshift-it
+sh run_tests_with_dekorate.sh
 ```
 
