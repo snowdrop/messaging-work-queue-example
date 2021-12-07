@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# deploy broker
+oc apply -f .openshiftio/amq.yaml
+oc new-app --template=amq-broker-72-basic -p APPLICATION_NAME=work-queue-broker -p IMAGE_STREAM_NAMESPACE=$(oc project -q) -p AMQ_NAME=work-queue-broker -p AMQ_PROTOCOL=amqp -p AMQ_USER=work-queue -p AMQ_PASSWORD=work-queue
+
 # 1.- Deploy Frontend
 ./mvnw -s .github/mvn-settings.xml clean verify -pl frontend -Popenshift -Ddekorate.deploy=true
 
