@@ -1,31 +1,34 @@
-# Messaging Work Queue Mission for Spring Boot
+= Messaging Work Queue Mission for Spring Boot
+:toc: left
 
-## Purpose
+== Purpose
 
 This mission example demonstrates how to dispatch tasks to a scalable
 set of worker processes using a message queue. It uses the AMQP 1.0
 message protocol to send and receive messages.
 
-## Prerequisites
+== Prerequisites
 
 * The user has access to an OpenShift instance and is logged in.
 
 * The user has selected a project in which the frontend and backend
   processes will be deployed.
 
-## Modules
+== Modules
 
 The `frontend` module serves the web interface and communicates with
 workers in the backend.
 
 The `worker` module implements the worker service in the backend.
 
-## Deployment
+== Deployment
 
 ### From a template
 
 Deploy AMQ broker:
-```bash
+
+[source,shell script]
+----
 oc apply -f .openshiftio/amq.yaml
 
 oc new-app --template=amq-broker-72-basic \
@@ -35,33 +38,38 @@ oc new-app --template=amq-broker-72-basic \
   -p AMQ_PROTOCOL=amqp \
   -p AMQ_USER=work-queue \
   -p AMQ_PASSWORD=work-queue
-```
+----
 
 Deploy frontend:
-```bash
+
+[source,shell script]
+----
 oc apply -f ./frontend/.openshiftio/application.yaml
 
 oc new-app --template=spring-boot-messaging-work-queue-frontend \
   -p SOURCE_REPOSITORY_URL=https://github.com/snowdrop/messaging-work-queue-example \
   -p SOURCE_REPOSITORY_REF=sb-2.4.x \
   -p SOURCE_REPOSITORY_DIR=frontend
-```
+----
 
 Deploy worker:
-```bash
+
+[source,shell script]
+----
 oc apply -f ./worker/.openshiftio/application.yaml
 
 oc new-app --template=spring-boot-messaging-work-queue-worker \
   -p SOURCE_REPOSITORY_URL=https://github.com/snowdrop/messaging-work-queue-example \
   -p SOURCE_REPOSITORY_REF=sb-2.4.x \
   -p SOURCE_REPOSITORY_DIR=worker
-```
+----
 
-### With Dekorate
+=== With Dekorate
 
 Run the following commands to configure and deploy the applications.
 
-```bash
+[source,shell script]
+----
 oc apply -f .openshiftio/amq.yaml
 
 oc new-app --template=amq-broker-72-basic \
@@ -71,28 +79,42 @@ oc new-app --template=amq-broker-72-basic \
   -p AMQ_PROTOCOL=amqp \
   -p AMQ_USER=work-queue \
   -p AMQ_PASSWORD=work-queue
-```
+----
 
 Deploy frontend:
-```bash
+
+[source,shell script]
+----
 ./mvnw clean verify -pl frontend -Popenshift -Ddekorate.deploy=true
-```
+----
 
 Deploy worker:
-```bash
+
+[source,shell script]
+----
 ./mvnw clean verify -pl worker -Popenshift -Ddekorate.deploy=true
-```
+----
 
 ## Running integration tests using Dekorate
 
 Note: integration tests are executed on a current namespace, so make sure to not run them in a production environment.
 
 To execute the tests run the following command:
-```bash
+[source,shell script]
+----
 ./run_tests_with_dekorate.sh
-```
+----
 
-## Running integration tests using S2i
-```bash
+== Running integration tests using S2i
+
+[source,shell script]
+----
 ./run_tests_with_s2i.sh
-```
+----
+
+This script can take 2 parameters referring to the repository and the branch to use to source the images from.
+
+[source,shell script]
+----
+./run_tests_with_s2i.sh "https://github.com/snowdrop/message-work-queue-example" branch-to-test
+----
