@@ -57,11 +57,6 @@ oc new-app --template=spring-boot-messaging-work-queue-worker \
   -p SOURCE_REPOSITORY_DIR=worker
 ```
 
-Run tests:
-```bash
-sh run_tests_with_s2i.sh
-```
-
 ### With Dekorate
 
 Run the following commands to configure and deploy the applications.
@@ -94,6 +89,10 @@ Note: integration tests are executed on a current namespace, so make sure to not
 
 To execute the tests run the following command:
 ```bash
-sh run_tests_with_dekorate.sh
+./run_tests_with_dekorate.sh
 ```
 
+## Running integration tests using S2i
+```bash
+./run_tests_with_s2i.sh
+```
