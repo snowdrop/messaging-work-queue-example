@@ -23,47 +23,6 @@ The `worker` module implements the worker service in the backend.
 
 == Deployment
 
-### From a template
-
-Deploy AMQ broker:
-
-[source,shell script]
-----
-oc apply -f .openshiftio/amq.yaml
-
-oc new-app --template=amq-broker-72-basic \
-  -p APPLICATION_NAME=work-queue-broker \
-  -p IMAGE_STREAM_NAMESPACE=$(oc project -q) \
-  -p AMQ_NAME=work-queue-broker \
-  -p AMQ_PROTOCOL=amqp \
-  -p AMQ_USER=work-queue \
-  -p AMQ_PASSWORD=work-queue
-----
-
-Deploy frontend:
-
-[source,shell script]
-----
-oc apply -f ./frontend/.openshiftio/application.yaml
-
-oc new-app --template=spring-boot-messaging-work-queue-frontend \
-  -p SOURCE_REPOSITORY_URL=https://github.com/snowdrop/messaging-work-queue-example \
-  -p SOURCE_REPOSITORY_REF=sb-2.4.x \
-  -p SOURCE_REPOSITORY_DIR=frontend
-----
-
-Deploy worker:
-
-[source,shell script]
-----
-oc apply -f ./worker/.openshiftio/application.yaml
-
-oc new-app --template=spring-boot-messaging-work-queue-worker \
-  -p SOURCE_REPOSITORY_URL=https://github.com/snowdrop/messaging-work-queue-example \
-  -p SOURCE_REPOSITORY_REF=sb-2.4.x \
-  -p SOURCE_REPOSITORY_DIR=worker
-----
-
 === With Dekorate
 
 Run the following commands to configure and deploy the applications.
@@ -116,5 +75,5 @@ This script can take 2 parameters referring to the repository and the branch to 
 
 [source,shell script]
 ----
-./run_tests_with_s2i.sh "https://github.com/snowdrop/message-work-queue-example" branch-to-test
+./run_tests_with_s2i.sh "https://github.com/snowdrop/messaging-work-queue-example" branch-to-test
 ----
