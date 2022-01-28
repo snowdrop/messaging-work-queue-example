@@ -199,6 +199,7 @@ objects:
       group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-frontend
   spec:
+    path: /
     port:
       targetPort: 8080
     to:

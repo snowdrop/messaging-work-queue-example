@@ -185,6 +185,7 @@ objects:
       group: dev.snowdrop.example
     name: spring-boot-messaging-work-queue-worker
   spec:
+    path: /
     ports:
     - name: http
       port: 8080
