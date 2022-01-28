@@ -16,19 +16,6 @@
 
 package dev.snowdrop.example;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import io.dekorate.testing.annotation.Inject;
-import io.dekorate.testing.annotation.Named;
-import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.LocalPortForward;
-import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
-
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static io.restassured.RestAssured.withArgs;
@@ -42,21 +29,24 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.AfterEach;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import io.dekorate.testing.annotation.Inject;
+import io.dekorate.testing.annotation.Named;
+import io.dekorate.testing.openshift.annotation.OpenshiftIntegrationTest;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 
 @OpenshiftIntegrationTest(deployEnabled = false, buildEnabled = false)
 public class OpenShiftIT {
 
     @Inject
-    KubernetesClient client;
-
-    @Inject
     @Named("spring-boot-messaging-work-queue-frontend")
-    Pod frontendPod;
-
-    LocalPortForward appPort;
+    URL frontend;
 
     private URL dataUrl;
 
@@ -66,18 +56,9 @@ public class OpenShiftIT {
 
     @BeforeEach
     public void before() throws MalformedURLException {
-        appPort = client.pods().withName(frontendPod.getMetadata().getName()).portForward(8080);
-        URL dashboardUrl = new URL("http://localhost:" + appPort.getLocalPort());
-        dataUrl = new URL(dashboardUrl, "api/data");
-        requestUrl = new URL(dashboardUrl, "api/send-request");
-        responseUrl = new URL(dashboardUrl, "api/receive-response");
-    }
-
-    @AfterEach
-    public void tearDown() throws IOException {
-        if (appPort != null) {
-            appPort.close();
-        }
+        dataUrl = new URL(frontend, "api/data");
+        requestUrl = new URL(frontend, "api/send-request");
+        responseUrl = new URL(frontend, "api/receive-response");
     }
 
     @Test
