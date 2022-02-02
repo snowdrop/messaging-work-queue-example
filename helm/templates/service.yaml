@@ -1,0 +1,75 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    description: The broker's console and Jolokia port.
+  labels:
+    application: {{ .Values.amq.name }}
+  name: "{{ .Values.amq.name }}-jolokia"
+spec:
+  ports:
+    - port: 8161
+      targetPort: 8161
+  selector:
+    deploymentConfig: {{ .Values.amq.name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    description: The broker's AMQP port.
+  labels:
+    application: {{ .Values.amq.name }}
+  name: "{{ .Values.amq.name }}-amqp"
+spec:
+  ports:
+    - port: 5672
+      targetPort: 5672
+  selector:
+    deploymentConfig: {{ .Values.amq.name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    description: The broker's MQTT port.
+  labels:
+    application: {{ .Values.amq.name }}
+  name: "{{ .Values.amq.name }}-mqtt"
+spec:
+  ports:
+    - port: 1883
+      targetPort: 1883
+  selector:
+    deploymentConfig: {{ .Values.amq.name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    description: The broker's STOMP port.
+  labels:
+    application: {{ .Values.amq.name }}
+  name: "{{ .Values.amq.name }}-stomp"
+spec:
+  ports:
+    - port: 61613
+      targetPort: 61613
+  selector:
+    deploymentConfig: {{ .Values.amq.name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    description: The broker's OpenWire port.
+  labels:
+    application: {{ .Values.amq.name }}
+  name: "{{ .Values.amq.name }}-tcp"
+spec:
+  ports:
+    - port: 61616
+      targetPort: 61616
+  selector:
+    deploymentConfig: {{ .Values.amq.name }}
