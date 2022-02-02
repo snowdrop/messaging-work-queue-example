@@ -54,6 +54,26 @@ Deploy worker:
 ./mvnw clean verify -pl worker -Popenshift -Ddekorate.deploy=true
 ----
 
+== Deploying application on OpenShift using Helm
+
+First, make sure you have installed the Helm command line and connected/logged to a kubernetes cluster.
+
+Then, you need to install the example by doing:
+
+[source,shell script]
+----
+helm install messaging ./helm --set frontend.s2i.source.repo=https://github.com/snowdrop/messaging-work-queue-example --set frontend.s2i.source.ref=<branch-to-use> --set worker.s2i.source.repo=https://github.com/snowdrop/messaging-work-queue-example --set worker.s2i.source.ref=<branch-to-use>
+----
+
+**note**: Replace `<branch-to-use>` with one branch from `https://github.com/snowdrop/messaging-work-queue-example/branches/all`.
+
+And to uninstall the chart, execute:
+
+[source,shell script]
+----
+helm uninstall messaging
+----
+
 ## Running integration tests using Dekorate
 
 Note: integration tests are executed on a current namespace, so make sure to not run them in a production environment.
@@ -76,4 +96,18 @@ This script can take 2 parameters referring to the repository and the branch to 
 [source,shell script]
 ----
 ./run_tests_with_s2i.sh "https://github.com/snowdrop/messaging-work-queue-example" branch-to-test
+----
+
+== Running Tests on OpenShift using Helm
+
+[source,shell script]
+----
+./run_tests_with_helm.sh
+----
+
+This script can take 2 parameters referring to the repository and the branch to use to source the images from.
+
+[source,shell script]
+----
+./run_tests_with_helm.sh "https://github.com/snowdrop/messaging-work-queue-example" branch-to-test
 ----
