@@ -2,6 +2,10 @@ frontend:
   name: spring-boot-messaging-work-queue-frontend
   version: 2.5.8-1-SNAPSHOT
   s2i:
+    # Default s2i source repository
+    source:
+      repo: https://github.com/snowdrop/messaging-work-queue-example
+      ref: sb-2.5.x
     env:
       - name: MAVEN_ARGS_APPEND
         value: "-pl frontend"
@@ -16,6 +20,10 @@ worker:
   name: spring-boot-messaging-work-queue-worker
   version: 2.5.8-1-SNAPSHOT
   s2i:
+    # Default s2i source repository
+    source:
+      repo: https://github.com/snowdrop/messaging-work-queue-example
+      ref: sb-2.5.x
     env:
       - name: MAVEN_ARGS_APPEND
         value: "-pl worker"
