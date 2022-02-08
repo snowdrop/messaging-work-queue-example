@@ -62,7 +62,29 @@ Then, you need to install the example by doing:
 
 [source,shell script]
 ----
-helm install messaging ./helm --set frontend.s2i.source.repo=https://github.com/snowdrop/messaging-work-queue-example --set frontend.s2i.source.ref=<branch-to-use> --set worker.s2i.source.repo=https://github.com/snowdrop/messaging-work-queue-example --set worker.s2i.source.ref=<branch-to-use>
+helm install messaging ./helm --set frontend.route.expose=true --set frontend.s2i.source.repo=https://github.com/snowdrop/messaging-work-queue-example --set frontend.s2i.source.ref=<branch-to-use> --set worker.route.expose=true --set worker.s2i.source.repo=https://github.com/snowdrop/messaging-work-queue-example --set worker.s2i.source.ref=<branch-to-use>
+----
+
+**note**: Replace `<branch-to-use>` with one branch from `https://github.com/snowdrop/messaging-work-queue-example/branches/all`.
+
+And to uninstall the chart, execute:
+
+[source,shell script]
+----
+helm uninstall messaging
+----
+
+== Deploying application on Kubernetes using Helm
+
+Requirements:
+- Have installed [the Helm command line](https://helm.sh/docs/intro/install/)
+- Have connected/logged to a kubernetes cluster
+
+You need to install the example by doing:
+
+[source,shell script]
+----
+helm install messaging ./helm --set worker.ingress.host=<your k8s domain> --set frontend.ingress.host=<your k8s domain>
 ----
 
 **note**: Replace `<branch-to-use>` with one branch from `https://github.com/snowdrop/messaging-work-queue-example/branches/all`.
@@ -102,12 +124,34 @@ This script can take 2 parameters referring to the repository and the branch to 
 
 [source,shell script]
 ----
-./run_tests_with_helm.sh
+./run_tests_with_helm_in_ocp.sh
 ----
 
 This script can take 2 parameters referring to the repository and the branch to use to source the images from.
 
 [source,shell script]
 ----
-./run_tests_with_helm.sh "https://github.com/snowdrop/messaging-work-queue-example" branch-to-test
+./run_tests_with_helm_in_ocp.sh "https://github.com/snowdrop/messaging-work-queue-example" branch-to-test
+----
+
+== Running Tests on Kubernetes using Helm
+
+First, you need to create the k8s namespace:
+
+[source,shell script]
+----
+kubectl create namespace <the k8s namespace>
+----
+
+Then, run the tests by specifying the container registry and the kubernetes namespace:
+[source,shell script]
+----
+./run_tests_with_helm_in_k8s.sh <your container registry: for example "quay.io/user"> <the k8s namespace>
+----
+
+For example:
+
+[source,shell script]
+----
+./run_tests_with_helm_in_k8s.sh "quay.io/user" "myNamespace"
 ----
