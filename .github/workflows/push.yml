@@ -27,14 +27,14 @@ jobs:
       - name: Push Image to Quay.io
         run: |
           CONTAINER_REGISTRY=quay.io/snowdrop
-          ## Cute name service:
+          ## Frontend service:
           FRONTEND_IMAGE=spring-boot-messaging-frontend-example:2.5.8
-          docker build ./cute-name-service -t $FRONTEND_IMAGE
+          docker build ./frontend -t $FRONTEND_IMAGE
           docker tag $FRONTEND_IMAGE $CONTAINER_REGISTRY/$FRONTEND_IMAGE
           docker push $CONTAINER_REGISTRY/$FRONTEND_IMAGE
 
-          ## Greeting service:
+          ## Worker service:
           WORKER_IMAGE=spring-boot-messaging-worker-example:2.5.8
-          docker build ./greeting-service -t $WORKER_IMAGE
+          docker build ./worker -t $WORKER_IMAGE
           docker tag $WORKER_IMAGE $CONTAINER_REGISTRY/$WORKER_IMAGE
           docker push $CONTAINER_REGISTRY/$WORKER_IMAGE
