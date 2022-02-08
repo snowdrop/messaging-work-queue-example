@@ -1,39 +1,35 @@
 frontend:
   name: spring-boot-messaging-work-queue-frontend
   version: 2.5.8-1-SNAPSHOT
+  docker:
+    image: quay.io/snowdrop/spring-boot-messaging-frontend-example:2.5.8
+  env:
+    - name: MESSAGING_SERVICE_HOST
+      value: "broker-amqp"
+    - name: MESSAGING_SERVICE_PORT
+      value: "5672"
   s2i:
-    # Default s2i source repository
-    source:
-      repo: https://github.com/snowdrop/messaging-work-queue-example
-      ref: sb-2.5.x
     env:
       - name: MAVEN_ARGS_APPEND
         value: "-pl frontend"
       - name: ARTIFACT_DIR
         value: "frontend/target"
+worker:
+  name: spring-boot-messaging-work-queue-worker
+  version: 2.5.8-1-SNAPSHOT
+  docker:
+    image: quay.io/snowdrop/spring-boot-messaging-worker-example:2.5.8
   env:
     - name: MESSAGING_SERVICE_HOST
       value: "broker-amqp"
     - name: MESSAGING_SERVICE_PORT
       value: "5672"
-worker:
-  name: spring-boot-messaging-work-queue-worker
-  version: 2.5.8-1-SNAPSHOT
   s2i:
-    # Default s2i source repository
-    source:
-      repo: https://github.com/snowdrop/messaging-work-queue-example
-      ref: sb-2.5.x
     env:
       - name: MAVEN_ARGS_APPEND
         value: "-pl worker"
       - name: ARTIFACT_DIR
         value: "worker/target"
-  env:
-    - name: MESSAGING_SERVICE_HOST
-      value: "broker-amqp"
-    - name: MESSAGING_SERVICE_PORT
-      value: "5672"
 amq:
   name: broker
   image: registry.access.redhat.com/amq-broker-7/amq-broker-72-openshift:1.3
