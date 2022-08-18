@@ -9,9 +9,9 @@ message protocol to send and receive messages.
 
 == Prerequisites
 
-* The user has access to an OpenShift instance and is logged in.
-
-* The user has selected a project in which the frontend and backend
+- JDK 11+ installed with JAVA_HOME configured appropriately
+- The user has access to an OpenShift instance and is logged in.
+- The user has selected a project in which the frontend and backend
   processes will be deployed.
 
 == Modules
