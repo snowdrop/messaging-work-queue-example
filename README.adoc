@@ -103,7 +103,7 @@ Note: integration tests are executed on a current namespace, so make sure to not
 To execute the tests run the following command:
 [source,shell script]
 ----
-./run_tests_with_dekorate.sh
+./run_tests_with_dekorate_in_ocp.sh
 ----
 
 == Running integration tests using S2i

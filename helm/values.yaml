@@ -1,8 +1,8 @@
 frontend:
   name: spring-boot-messaging-work-queue-frontend
-  version: 2.5.8-1-SNAPSHOT
+  version: 2.7-SNAPSHOT
   docker:
-    image: quay.io/snowdrop/spring-boot-messaging-frontend-example:2.5.8
+    image: quay.io/snowdrop/spring-boot-messaging-frontend-example:2.7
   env:
     - name: MESSAGING_SERVICE_HOST
       value: "broker-amqp"
@@ -16,9 +16,9 @@ frontend:
         value: "frontend/target"
 worker:
   name: spring-boot-messaging-work-queue-worker
-  version: 2.5.8-1-SNAPSHOT
+  version: 2.7-SNAPSHOT
   docker:
-    image: quay.io/snowdrop/spring-boot-messaging-worker-example:2.5.8
+    image: quay.io/snowdrop/spring-boot-messaging-worker-example:2.7
   env:
     - name: MESSAGING_SERVICE_HOST
       value: "broker-amqp"

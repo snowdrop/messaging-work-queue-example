@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+MAVEN_OPTS=${1:-}
 source scripts/waitFor.sh
 
 # deploy broker
@@ -11,18 +11,18 @@ if [[ $(waitFor "work-queue-broker" "application") -eq 1 ]] ; then
 fi
 
 # 1.- Deploy Frontend
-./mvnw -s .github/mvn-settings.xml clean verify -pl frontend -Popenshift -Ddekorate.deploy=true
+./mvnw -s .github/mvn-settings.xml clean verify -pl frontend -Popenshift -Ddekorate.deploy=true $MAVEN_OPTS
 if [[ $(waitFor "spring-boot-messaging-work-queue-frontend" "app.kubernetes.io/name") -eq 1 ]] ; then
   echo "Frontend failed to deploy. Aborting"
   exit 1
 fi
 
 # 2.- Deploy Worker
-./mvnw -s .github/mvn-settings.xml clean verify -pl worker -Popenshift -Ddekorate.deploy=true
+./mvnw -s .github/mvn-settings.xml clean verify -pl worker -Popenshift -Ddekorate.deploy=true $MAVEN_OPTS
 if [[ $(waitFor "spring-boot-messaging-work-queue-worker" "app.kubernetes.io/name") -eq 1 ]] ; then
   echo "Worker failed to deploy. Aborting"
   exit 1
 fi
 
-# 3.- Run OpenShift Tests
-./mvnw -s .github/mvn-settings.xml verify -pl tests -Popenshift-it
+# 3.- Run Tests
+./mvnw -s .github/mvn-settings.xml verify -pl tests -Popenshift-it $MAVEN_OPTS
