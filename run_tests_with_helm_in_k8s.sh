@@ -32,5 +32,5 @@ if [[ $(waitFor "spring-boot-messaging-work-queue-frontend" "app") -eq 1 ]] ; th
   exit 1
 fi
 
-# Run OpenShift Tests
+# Run Tests
 ./mvnw -s .github/mvn-settings.xml clean verify -Pkubernetes-it -Dkubernetes.namespace=$K8S_NAMESPACE
